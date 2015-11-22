@@ -9,6 +9,7 @@
     enable  = true;
     version = 2;
     device = "/dev/vda";
+    timeout = 1;
   };
 
   networking.hostName = "pepcon";
@@ -27,6 +28,7 @@
     wget
     vim
     rustc
+    tmux
     xorg.xmodmap
     zsh
   ];
@@ -41,7 +43,10 @@
     xkbVariant = "dvp";
     xkbOptions = "ctrl:nocaps";
 
-    desktopManager.default = "none";
+    desktopManager = {
+      default      = "none";
+      xterm.enable = false;
+    };
 
     displayManager.slim = {
       enable      = true;
@@ -58,7 +63,6 @@
   users.extraUsers.alex = {
     name       = "alex";
     group      = "wheel";
-    uid        = 1000;
     createHome = true;
     home       = "/home/alex";
     shell      = "${pkgs.zsh}/bin/zsh";
