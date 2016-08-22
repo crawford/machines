@@ -11,6 +11,7 @@
       bluez = pkgs.bluez5;
     };
     vim.ftNixSupport = true;
+    chromium.enableWideVine = true;
   };
 
   boot.initrd.luks.devices = [
@@ -56,6 +57,7 @@
       gcc-arm-embedded
       git
       gnumake
+      kicad
       mutt
       patchelf
       qt55.full
@@ -66,6 +68,7 @@
       usbutils
       vim
       vimPlugins.vundle
+      wings
       wget
       xorg.xmodmap
     ];
