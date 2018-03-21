@@ -3,20 +3,37 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./redhat-config.nix
   ];
 
-  nix.useSandbox = true;
+  nix = {
+    autoOptimiseStore = true;
+    buildCores = 8;
+    useSandbox = true;
+    gc.automatic = true;
+  };
 
   nixpkgs.config = {
     allowUnfree = true;
     vim.ftNixSupport = true;
+    #virtualbox.enableExtensionPack = true;
 
     packageOverrides = pkgs: {
       spotify = pkgs.spotify.overrideDerivation (oldAttrs: {
         src = pkgs.fetchurl {
-          url = "http://repository-origin.spotify.com/pool/non-free/s/spotify-client/spotify-client_1.0.69.336.g7edcc575-39_amd64.deb";
-          sha256 = "ed0dc69f7e50879fcf7bd1bb67e33f08af0c17ebd7bb608ce4e7a143dec1022e";
+          url = "http://repository-origin.spotify.com/pool/non-free/s/spotify-client/spotify-client_1.0.72.117.g6bd7cc73-35_amd64.deb";
+          sha256 = "5749c853479a6559b8642a531ba357e40d3c95116314e74e31197569dee62c7a";
         };
+      });
+
+      strongswan = pkgs.strongswan.overrideAttrs (attrs: {
+        buildInputs = attrs.buildInputs ++ [ pkgs.networkmanager ];
+        configureFlags = attrs.configureFlags ++ [ "--enable-nm" ];
+      });
+      networkmanager_strongswan = pkgs.networkmanager_strongswan.overrideAttrs (attrs: {
+        buildInputs = attrs.buildInputs ++ [ pkgs.strongswan ];
+        configureFlags = [ "--with-charon=${pkgs.strongswan}/libexec/ipsec/charon-nm" ];
+        #configureFlags = [ "--with-charon=/nix/store/1lgzwvvy9iqfacy1xqrkhvgflavsfnci-strongswan-5.6.0/libexec/ipsec/charon-nm" ];
       });
     };
   };
@@ -28,23 +45,24 @@
   };
 
   fileSystems = {
-    "/boot" = {
-      device = "systemd-1";
-      fsType = "autofs";
-    };
-
     "/var/lib/docker" = {
-      device = "/dev/disk/by-uuid/53ef1c9e-39a3-41fe-996b-98ad91afa021";
+      device = "/dev/mapper/root";
       fsType = "btrfs";
       options = [ "subvol=@docker" ];
     };
   };
 
   networking = {
+    networkmanager = {
+      enable = true;
+      packages = [ pkgs.networkmanager_strongswan ];
+      #enableStrongSwan = true;
+    };
     hostName = "buzz";
     firewall.allowedTCPPorts = [ 12345 ];
     #firewall.allowedUDPPorts = [ 67 68 ];
     #wireless.enable = true;
+    #extraHosts = "172.17.4.101 provision.tectonicsandbox.com";
   };
 
   hardware = {
@@ -61,6 +79,7 @@
   };
 
   time.timeZone = "US/Pacific";
+  #time.timeZone = "America/New_York";
   #time.timeZone = "Europe/Berlin";
 
   security.sudo.wheelNeedsPassword = false;
@@ -75,7 +94,7 @@
     };
 
     systemPackages = with pkgs; [
-      (import ./vim.nix)
+      (import ./vim-config.nix)
 
       sqlite
       autoconf
@@ -86,7 +105,6 @@
 
       bind
       chromium
-      docker
       file
       firefox-beta-bin
       gcc
@@ -100,8 +118,9 @@
       mutt
       patchelf
       #qt55.full
-      rkt
       spotify
+      strongswan
+      thunderbird
       tigervnc
       tmux
       usbutils
@@ -143,17 +162,34 @@
       nssmdns  = true;
     };
 
+    dbus.packages = [ pkgs.strongswan ];
+
     printing.enable = true;
+
     tcsd.enable = true;
   };
 
+  #powerManagement.powertop.enable = true;
+  system.autoUpgrade.enable = true;
+
   virtualisation = {
     docker = {
+      autoPrune.enable = true;
       enable = true;
       storageDriver = "btrfs";
     };
 
-    virtualbox.host.enable = true;
+    rkt = {
+      enable = true;
+      gc.automatic = true;
+    };
+
+    libvirtd = {
+      enable = true;
+      onShutdown = "shutdown";
+    };
+
+    #virtualbox.host.enable = true;
   };
 
   users.extraUsers.alex = {
