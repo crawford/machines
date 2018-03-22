@@ -1,21 +1,7 @@
-{ pkgs }:
-''
+with import <nixpkgs> {};
+
+pkgs.writeText "zshrc" ''
 #!/bin/zsh
-
-# The following lines were added by compinstall
-zstyle ':completion:*' completer _complete _ignored _correct _approximate
-zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' ''
-zstyle ':completion:*' verbose true
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' menu select=0
-
-bindkey '^[[Z' reverse-menu-complete
-
-autoload -Uz compinit
-autoload -U colors
-colors
-compinit
-# End of lines added by compinstall
 
 HISTFILE=~/.histfile
 HISTSIZE=100000
