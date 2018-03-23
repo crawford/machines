@@ -29,16 +29,6 @@
           sha256 = "5749c853479a6559b8642a531ba357e40d3c95116314e74e31197569dee62c7a";
         };
       });
-
-      strongswan = pkgs.strongswan.overrideAttrs (attrs: {
-        buildInputs = attrs.buildInputs ++ [ pkgs.networkmanager ];
-        configureFlags = attrs.configureFlags ++ [ "--enable-nm" ];
-      });
-      networkmanager_strongswan = pkgs.networkmanager_strongswan.overrideAttrs (attrs: {
-        buildInputs = attrs.buildInputs ++ [ pkgs.strongswan ];
-        #configureFlags = [ "--with-charon=${pkgs.strongswan}/libexec/ipsec/charon-nm" ];
-        configureFlags = [ "--with-charon=/nix/store/dlinjayaxsxl1bjg4733id3867amhd3b-strongswan-5.6.0/libexec/ipsec/charon-nm" ];
-      });
     };
   };
 
@@ -58,8 +48,7 @@
   networking = {
     networkmanager = {
       enable = true;
-      packages = [ pkgs.networkmanager_strongswan ];
-      #enableStrongSwan = true;
+      enableStrongSwan = true;
     };
     hostName = "yuri";
     firewall.allowedTCPPorts = [ 12345 ];
@@ -79,7 +68,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   environment = {
-    etc."binfmt.d/qemu-aarch64.conf".text = ":qemu-aarch64:M::\\x7fELF\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\xb7:\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\x00\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\xfe\\xff\\xff:/usr/bin/qemu-aarch64:\n";
+    #etc."binfmt.d/qemu-aarch64.conf".text = ":qemu-aarch64:M::\\x7fELF\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\xb7:\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\x00\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\xfe\\xff\\xff:/usr/bin/qemu-aarch64:\n";
 
     shells = [ "${pkgs.zsh}/bin/zsh" ];
 
@@ -101,7 +90,6 @@
       mutt
       patchelf
       spotify
-      strongswan
       usbutils
       vim
       vimPlugins.vundle
@@ -162,8 +150,6 @@
       nssmdns  = true;
     };
 
-    dbus.packages = [ pkgs.strongswan ];
-
     printing.enable = true;
 
     tcsd.enable = true;
@@ -206,5 +192,5 @@
     createHome  = false;
   };
 
-  system.stateVersion = "17.09";
+  system.stateVersion = "18.03";
 }
