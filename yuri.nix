@@ -21,15 +21,6 @@
     allowUnfree = true;
     vim.ftNixSupport = true;
     #virtualbox.enableExtensionPack = true;
-
-    packageOverrides = pkgs: {
-      spotify = pkgs.spotify.overrideDerivation (oldAttrs: {
-        src = pkgs.fetchurl {
-          url = "http://repository-origin.spotify.com/pool/non-free/s/spotify-client/spotify-client_1.0.72.117.g6bd7cc73-35_amd64.deb";
-          sha256 = "5749c853479a6559b8642a531ba357e40d3c95116314e74e31197569dee62c7a";
-        };
-      });
-    };
   };
 
   boot.loader = {
@@ -46,13 +37,23 @@
   };
 
   networking = {
-    networkmanager = {
-      enable = true;
-      enableStrongSwan = true;
-    };
+    networkmanager.enable = true;
     hostName = "yuri";
     firewall.allowedTCPPorts = [ 12345 ];
     #firewall.allowedUDPPorts = [ 67 68 ];
+  };
+
+  hardware = {
+    enableAllFirmware = true;
+    bluetooth = {
+      enable = true;
+      powerOnBoot = false;
+    };
+
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+    };
   };
 
   i18n = {
@@ -79,22 +80,9 @@
     systemPackages = with pkgs; [
       (import ./vim-config.nix)
 
-      bind
-      file
-      gcc
-      git
-      gnumake
       gnupg
-      iftop
-      iotop
-      mutt
-      patchelf
-      spotify
-      usbutils
       vim
       vimPlugins.vundle
-      w3m
-      wget
       xorg.xmodmap
     ];
   };
@@ -145,6 +133,14 @@
       SUBSYSTEM=="usb", ACTION=="add|change", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0407", GROUP="wheel", TAG+="uaccess"
     '';
 
+    openssh = {
+      enable = true;
+      passwordAuthentication = false;
+      permitRootLogin = "no";
+    };
+
+    sshguard.enable = true;
+
     avahi = {
       enable   = true;
       nssmdns  = true;
@@ -155,7 +151,7 @@
     tcsd.enable = true;
   };
 
-  system.autoUpgrade.enable = true;
+  #system.autoUpgrade.enable = true;
 
   virtualisation = {
     docker = {
@@ -180,7 +176,7 @@
   users.extraUsers.alex = {
     name        = "alex";
     group       = "users";
-    extraGroups = [ "wheel" "plugdev" "rkt" ];
+    extraGroups = [ "wheel" "plugdev" "rkt" "libvirtd" ];
     createHome  = true;
     home        = "/home/alex";
     shell       = "/run/current-system/sw/bin/zsh";
@@ -191,6 +187,4 @@
     group       = "rkt";
     createHome  = false;
   };
-
-  system.stateVersion = "18.03";
 }
