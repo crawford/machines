@@ -5,6 +5,19 @@
     ./hardware-configuration.nix
   ];
 
+  nix = {
+    autoOptimiseStore = true;
+    buildCores        = 8;
+    useSandbox        = true;
+    gc.automatic = true;
+  };
+
+  nixpkgs.config = {
+    allowUnfree                    = true;
+    vim.ftNixSupport               = true;
+    virtualbox.enableExtensionPack = true;
+  };
+
   boot.loader = {
     systemd-boot.enable      = true;
     efi.canTouchEfiVariables = true;
@@ -23,24 +36,46 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  environment.systemPackages = with pkgs; [
-    (import ./vim_config.nix)
-    file
-    gcc
-    gcc-arm-embedded
-    gnumake
-    git
-    patchelf
-    tmux
-    usbutils
-    vim
-    wget
-    zsh
-  ];
+  environment = {
+    shells = [ "${pkgs.zsh}/bin/zsh" ];
+
+    sessionVariables = {
+      EDITOR = "vim";
+    };
+
+    systemPackages = with pkgs; [
+      (import ./vim-config.nix)
+      tmux
+      zsh
+    ];
+  };
+
+  programs = {
+    tmux = {
+      enable = true;
+      clock24 = true;
+      keyMode = "vi";
+      historyLimit = 50000;
+      terminal = "screen-256color";
+      extraTmuxConf = ''
+        set-option -g status-bg black
+        set-option -g status-fg white
+        set-window-option -g window-status-current-bg black
+        set-window-option -g window-status-current-fg cyan
+      '';
+    };
+
+    zsh = {
+      enable = true;
+      interactiveShellInit = ''
+        cat << EOF > $HOME/.zshrc
+        source ${import ./zsh-config.nix}
+        EOF
+      '';
+    };
+  };
 
   services = {
-    sshd.enable = true;
-
     xserver = {
       enable     = true;
       layout     = "us";
@@ -63,8 +98,17 @@
 
     udev.extraRules = ''
       ATTR{idVendor}=="1366", ATTR{idProduct}=="1010", MODE="0666"
+      ATTR{idVendor}=="1366", ATTR{idProduct}=="1015", MODE="0666"
       KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="f001", MODE="0666"
     '';
+
+    openssh = {
+      enable = true;
+      passwordAuthentication = false;
+      permitRootLogin = "no";
+    };
+
+    sshguard.enable = true;
   };
 
   users.extraUsers.alex = {
