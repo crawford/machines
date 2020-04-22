@@ -3,6 +3,7 @@
 {
   imports = [
     ./vim.nix
+    ./zsh.nix
   ];
 
   console.useXkbConfig = true;
@@ -43,16 +44,6 @@
         set-option -g status-fg white
         set-window-option -g window-status-current-style bg=black
         set-window-option -g window-status-current-style fg=cyan
-      '';
-    };
-
-    # TODO
-    zsh = {
-      enable = true;
-      interactiveShellInit = ''
-        cat << EOF > $HOME/.zshrc
-        source ${import ./zsh-config.nix}
-        EOF
       '';
     };
   };
