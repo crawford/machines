@@ -28,6 +28,7 @@
           set shiftwidth=4
           set list listchars=tab:›—,trail:·,extends:>,precedes:<
           set background=dark
+          set mouse=
 
           set t_Co=256
           set encoding=utf-8
