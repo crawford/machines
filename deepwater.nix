@@ -37,6 +37,8 @@
     };
   };
 
+  programs.zsh.promptColor = "0;34";
+
   services = {
     avahi = {
       enable  = true;
