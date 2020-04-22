@@ -13,6 +13,8 @@
     timeout                  = 1;
   };
 
+  environment.shellAliases.tmux = "tmux -2";
+
   networking.hostName = "pepcon";
 
   services = {
