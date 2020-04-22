@@ -19,6 +19,12 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  environment.shellAliases = {
+    ush = "ssh -o StrictHostKeyChecking=false -o UserKnownHostsFile=/dev/null";
+    ucp = "scp -o StrictHostKeyChecking=false -o UserKnownHostsFile=/dev/null";
+    utc = "TZ=UTC date";
+  };
+
   programs = {
     command-not-found.enable = true;
     iftop.enable             = true;
