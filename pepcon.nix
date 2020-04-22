@@ -17,6 +17,8 @@
 
   networking.hostName = "pepcon";
 
+  programs.zsh.promptColor = "0;33";
+
   services = {
     udev.extraRules = ''
       ATTR{idVendor}=="1366", ATTR{idProduct}=="1010", MODE="0666"
