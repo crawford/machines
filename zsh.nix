@@ -1,7 +1,16 @@
-{ pkgs, ... }:
+{ config, lib, ... }:
 
+let cfg = config.programs.zsh;
+in
 {
-  programs.zsh = {
+  options.programs.zsh.promptColor = lib.mkOption {
+    default = "0;37";
+    description = ''
+      The ANSI color used to draw the non-root user prompt.
+    '';
+  };
+
+  config.programs.zsh = {
     enable   = true;
     histSize = 10000;
 
@@ -55,7 +64,7 @@
       then
         PROMPT=$'%{\e[0;41m%}(%{\e[1;30m%}%T %{\e[1;41m%}%n@%m %{\e[0;41m%}%~%{\e[0;41m%})%{\e[0m%} '
       else
-        PROMPT=$'%{\e[0;32m%}(%{\e[1;30m%}%T %{\e[0;32m%}%n@%m %{\e[0;37m%}%~%{\e[0;36m%}$(get_git_prompt_info)%{\e[0;32m%})%{\e[0m%} '
+        PROMPT=$'%{\e[${cfg.promptColor}m%}(%{\e[1;30m%}%T %{\e[${cfg.promptColor}m%}%n@%m %{\e[0;37m%}%~%{\e[0;36m%}$(get_git_prompt_info)%{\e[${cfg.promptColor}m%})%{\e[0m%} '
       fi
     '';
 
