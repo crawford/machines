@@ -37,7 +37,7 @@
     };
   };
 
-  programs.zsh.promptColor = "0;34";
+  programs.zsh.promptColor = "blue";
 
   services = {
     avahi = {
