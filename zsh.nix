@@ -69,7 +69,7 @@ in
       then
         PROMPT="%K{red}(%T %n@%m%(?.. ✘))%k "
       else
-        PROMPT='%F{${cfg.promptColor}}(%F{black}%B%T%b %F{${cfg.promptColor}}%n@%m%F{cyan}$(get_git_prompt_info)%(?.. %F{red}✘)%F{${cfg.promptColor}})%f '
+        PROMPT='%F{${cfg.promptColor}}(%f%F{black}%B%T%b %F{${cfg.promptColor}}%n@%m%F{cyan}$(get_git_prompt_info)%(?.. %F{red}✘)%F{${cfg.promptColor}})%f '
       fi
       RPROMPT="%F{${cfg.promptColor}}%~%f"
     '';
