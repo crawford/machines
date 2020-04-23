@@ -20,6 +20,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  boot.cleanTmpDir = true;
+
   environment.shellAliases = {
     ush = "ssh -o StrictHostKeyChecking=false -o UserKnownHostsFile=/dev/null";
     ucp = "scp -o StrictHostKeyChecking=false -o UserKnownHostsFile=/dev/null";
