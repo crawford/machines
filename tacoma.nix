@@ -142,7 +142,7 @@ in
       };
     };
 
-    programs.zsh.promptColor = "0;31";
+    programs.zsh.promptColor = "red";
 
     services = {
       btrfs.autoScrub.enable = true;

@@ -4,9 +4,9 @@ let cfg = config.programs.zsh;
 in
 {
   options.programs.zsh.promptColor = lib.mkOption {
-    default = "0;37";
+    default = "cyan";
     description = ''
-      The ANSI color used to draw the non-root user prompt.
+      The color used to draw the non-root user prompt. The supported values are detailed in http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html#Character-Highlighting.
     '';
   };
 
@@ -67,9 +67,9 @@ in
     promptInit = ''
       if [ $UID -eq 0 ]
       then
-        PROMPT=$'%{\e[0;41m%}(%{\e[1;30m%}%T %{\e[1;41m%}%n@%m%{\e[0;41m%}%(?.. ✘))%{\e[0m%} '
+        PROMPT="%K{red}(%T %n@%m%(?.. ✘))%k "
       else
-        PROMPT=$'%{\e[${cfg.promptColor}m%}(%{\e[1;30m%}%T %{\e[${cfg.promptColor}m%}%n@%m%{\e[0;36m%}$(get_git_prompt_info)%(?.. %{\e[1;31m%}✘)%{\e[${cfg.promptColor}m%})%{\e[0m%} '
+        PROMPT='%F{${cfg.promptColor}}(%F{black}%B%T%b %F{${cfg.promptColor}}%n@%m%F{cyan}$(get_git_prompt_info)%(?.. %F{red}✘)%F{${cfg.promptColor}})%f '
       fi
     '';
 

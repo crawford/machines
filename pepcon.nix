@@ -17,7 +17,7 @@
 
   networking.hostName = "pepcon";
 
-  programs.zsh.promptColor = "0;33";
+  programs.zsh.promptColor = "yellow";
 
   services = {
     udev.extraRules = ''
