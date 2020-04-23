@@ -71,6 +71,7 @@ in
       else
         PROMPT='%F{${cfg.promptColor}}(%F{black}%B%T%b %F{${cfg.promptColor}}%n@%m%F{cyan}$(get_git_prompt_info)%(?.. %F{red}✘)%F{${cfg.promptColor}})%f '
       fi
+      RPROMPT="%F{blue}%~%f"
     '';
 
     setOptions = [
