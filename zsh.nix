@@ -56,6 +56,11 @@ in
       }
       #End Git Integration
 
+      TMOUT=5
+      TRAPALRM () {
+        zle reset-prompt
+      }
+
       set -o vi
     '';
 
