@@ -4,6 +4,7 @@
   imports = [
     ./common.nix
     ./redhat-config.nix
+    ./rust.nix
   ];
 
   boot.loader = {

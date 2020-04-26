@@ -8,6 +8,7 @@
   imports = [
     ./hardware-configuration.nix
     ./redhat-config.nix
+    ./rust.nix
   ];
 
   nix = {
