@@ -40,7 +40,14 @@
     };
   };
 
-  programs.zsh.promptColor = "blue";
+  programs = {
+    zsh.promptColor = "blue";
+
+    wireshark = {
+      enable  = true;
+      package = pkgs.wireshark-qt;
+    };
+  };
 
   services = {
     avahi = {
@@ -57,6 +64,8 @@
       synaptics.enable             = false;
     };
   };
+
+  users.users.alex.extraGroups = [ "wireshark" ];
 
   virtualisation = {
     libvirtd = {
