@@ -40,6 +40,8 @@
     };
   };
 
+  powerManagement.powertop.enable = true;
+
   programs = {
     zsh.promptColor = "blue";
 
