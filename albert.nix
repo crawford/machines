@@ -25,6 +25,8 @@
     pulseaudio.package = pkgs.pulseaudioFull;
   };
 
+  powerManagement.powertop.enable = true;
+
   programs.zsh.promptColor = "magenta";
 
   services = {
