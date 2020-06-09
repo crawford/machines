@@ -60,11 +60,11 @@ in
   config = {
     boot = {
       kernelParams   = [ "console=ttyS1,115200n8" ];
-      loader.timeout = 1;
 
       loader = {
         efi.canTouchEfiVariables = true;
         systemd-boot.enable      = true;
+        timeout                  = 1;
       };
     };
 
