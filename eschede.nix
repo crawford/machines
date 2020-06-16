@@ -54,9 +54,11 @@ in {
       nginx = {
         clientMaxBodySize        = "0";
         enable                   = true;
-        eventsConfig             = "worker_connections 1024;";
         enableReload             = true;
+        eventsConfig             = "worker_connections 1024;";
+        recommendedOptimisation  = true;
         recommendedProxySettings = true;
+        recommendedTlsSettings   = true;
         upstreams                = cfg.upstreams;
 
         commonHttpConfig = ''
