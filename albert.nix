@@ -13,9 +13,9 @@
     efi.canTouchEfiVariables = true;
   };
 
-  networking = {
-    hostName              = "albert";
-    networkmanager.enable = true;
+  environment.etc = {
+    subuid.text = "alex:100000:65536";
+    subgid.text = "alex:100000:65536";
   };
 
   hardware = {
@@ -23,6 +23,11 @@
     enableAllFirmware  = true;
     pulseaudio.enable  = true;
     pulseaudio.package = pkgs.pulseaudioFull;
+  };
+
+  networking = {
+    hostName              = "albert";
+    networkmanager.enable = true;
   };
 
   powerManagement.powertop.enable = true;
@@ -49,7 +54,7 @@
     };
   };
 
-  users.extraUsers.alex.extraGroups = [ "wheel" "plugdev" ];
-
   system.stateVersion = "20.03";
+
+  users.extraUsers.alex.extraGroups = [ "wheel" "plugdev" ];
 }
