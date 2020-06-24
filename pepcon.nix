@@ -6,21 +6,17 @@
     ./rust.nix
   ];
 
-  nix.maxJobs = 4;
-
-  nixpkgs.config.virtualbox.enableExtensionPack = true;
+  environment.shellAliases.tmux          = "tmux -2";
+  networking.hostName                    = "pepcon";
+  nix.maxJobs                            = 4;
+  virtualisation.virtualbox.guest.enable = true;
+  programs.zsh.promptColor               = "#ff8700";
 
   boot.loader = {
     systemd-boot.enable      = true;
     efi.canTouchEfiVariables = true;
     timeout                  = 1;
   };
-
-  environment.shellAliases.tmux = "tmux -2";
-
-  networking.hostName = "pepcon";
-
-  programs.zsh.promptColor = "#ff8700";
 
   services = {
     udev.extraRules = ''
