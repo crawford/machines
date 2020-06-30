@@ -64,13 +64,6 @@
       passwordAuthentication = false;
       permitRootLogin        = "no";
     };
-
-    xserver = {
-      enable     = true;
-      layout     = "us";
-      xkbVariant = "dvp";
-      xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-    };
   };
 
   time.timeZone = "US/Pacific";
