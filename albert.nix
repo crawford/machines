@@ -21,8 +21,11 @@
   hardware = {
     bluetooth.enable   = true;
     enableAllFirmware  = true;
-    pulseaudio.enable  = true;
-    pulseaudio.package = pkgs.pulseaudioFull;
+
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+    };
   };
 
   networking = {
