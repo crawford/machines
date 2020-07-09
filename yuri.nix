@@ -101,9 +101,8 @@
     };
 
     libvirtd = {
-      enable       = true;
-      extraOptions = [ "--listen" ];
-      onShutdown   = "shutdown";
+      enable     = true;
+      onShutdown = "shutdown";
 
       extraConfig = ''
         listen_tls = 0
