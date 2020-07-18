@@ -32,6 +32,8 @@
     };
   };
 
+  hardware.cpu.intel.updateMicrocode = true;
+
   programs = {
     command-not-found.enable = true;
     iftop.enable             = true;
