@@ -84,7 +84,7 @@ in
     docker-containers = {
       doxie-upload = {
         image = "quay.io/crawford/doxie-upload:latest";
-        ports = [ "${cfg.ipAddress}:9080:8080/tcp" ];
+        ports = [ "${cfg.auxIpAddress}:80:8080/tcp" ];
         volumes = [ "/mnt/valdez/media/Scans:/uploads" ];
       };
 
