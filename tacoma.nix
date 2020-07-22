@@ -68,37 +68,45 @@ in
       };
     };
 
-    docker-containers.pihole = {
-      image = "pihole/pihole:latest";
-
-      environment = {
-        TZ                             = "${config.time.timeZone}";
-        WEBPASSWORD                    = "${cfg.piholePassword}";
-        ServerIP                       = "${cfg.ipAddress}";
-        DNSMASQ_LISTENING              = "all";
-        DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
-        DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
-        CONDITIONAL_FORWARDING         = "True";
-        CONDITIONAL_FORWARDING_IP      = "${cfg.gateway}";
-        CONDITIONAL_FORWARDING_DOMAIN  = "${cfg.domain}";
-        CONDITIONAL_FORWARDING_REVERSE = "${cfg.reverseLookupDomain}";
+    docker-containers = {
+      doxie-upload = {
+        image = "quay.io/crawford/doxie-upload:latest";
+        ports = [ "${cfg.ipAddress}:9080:8080/tcp" ];
+        volumes = [ "/mnt/valdez/media/Scans:/uploads" ];
       };
 
-      extraDockerOptions = [
-        "--dns=127.0.0.1"
-      ];
+      pihole = {
+        image = "pihole/pihole:latest";
 
-      ports = [
-        "${cfg.ipAddress}:53:53/tcp"
-        "${cfg.ipAddress}:53:53/udp"
-        "${cfg.ipAddress}:80:80"
-        "${cfg.ipAddress}:443:443"
-      ];
+        environment = {
+          TZ                             = "${config.time.timeZone}";
+          WEBPASSWORD                    = "${cfg.piholePassword}";
+          ServerIP                       = "${cfg.ipAddress}";
+          DNSMASQ_LISTENING              = "all";
+          DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
+          DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
+          CONDITIONAL_FORWARDING         = "True";
+          CONDITIONAL_FORWARDING_IP      = "${cfg.gateway}";
+          CONDITIONAL_FORWARDING_DOMAIN  = "${cfg.domain}";
+          CONDITIONAL_FORWARDING_REVERSE = "${cfg.reverseLookupDomain}";
+        };
 
-      volumes = [
-        "/var/lib/pihole/dnsmasq.d/:/etc/dnsmasq.d/"
-        "/var/lib/pihole/pihole/:/etc/pihole/"
-      ];
+        extraDockerOptions = [
+          "--dns=127.0.0.1"
+        ];
+
+        ports = [
+          "${cfg.ipAddress}:53:53/tcp"
+          "${cfg.ipAddress}:53:53/udp"
+          "${cfg.ipAddress}:80:80"
+          "${cfg.ipAddress}:443:443"
+        ];
+
+        volumes = [
+          "/var/lib/pihole/dnsmasq.d/:/etc/dnsmasq.d/"
+          "/var/lib/pihole/pihole/:/etc/pihole/"
+        ];
+      };
     };
 
     fileSystems."/mnt/valdez/media" = {
