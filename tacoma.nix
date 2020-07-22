@@ -6,6 +6,19 @@ in
   imports = [ ./common.nix ];
 
   options.tacoma = {
+    auxIpAddress = lib.mkOption {
+      description = ''
+        The auxilary IP address of the machine.
+      '';
+    };
+
+    auxIpAddressPrefix = lib.mkOption {
+      description = ''
+        The CIDR prefix length of the auxilary address of the machine.
+      '';
+      type = lib.types.ints.between 0 32;
+    };
+
     dnsServers = lib.mkOption {
       description = ''
         The list of DNS servers to use for the site.
@@ -33,13 +46,13 @@ in
 
     ipAddress = lib.mkOption {
       description = ''
-        The IP address of the machine.
+        The main IP address of the machine.
       '';
     };
 
     ipAddressPrefix = lib.mkOption {
       description = ''
-        The CIDR prefix length of address of the machine.
+        The CIDR prefix length of the main address of the machine.
       '';
       type = lib.types.ints.between 0 32;
     };
@@ -139,10 +152,16 @@ in
         interface = "uplink";
       };
 
-      interfaces.uplink.ipv4.addresses = [{
-        address      = "${cfg.ipAddress}";
-        prefixLength = cfg.ipAddressPrefix;
-      }];
+      interfaces.uplink.ipv4.addresses = [
+        {
+          address      = "${cfg.ipAddress}";
+          prefixLength = cfg.ipAddressPrefix;
+        }
+        {
+          address      = "${cfg.auxIpAddress}";
+          prefixLength = cfg.auxIpAddressPrefix;
+        }
+      ];
 
       vlans.dmz = {
         id        = cfg.dmzId;
