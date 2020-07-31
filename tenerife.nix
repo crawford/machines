@@ -3,7 +3,10 @@
 let cfg = config.tenerife;
 in
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    ./matrix-synapse.nix
+  ];
 
   options.tenerife = {
     domain = lib.mkOption {
@@ -46,18 +49,18 @@ in
     };
 
     networking = {
-      domain      = "${cfg.domain}";
+      domain      = cfg.domain;
       hostName    = "tenerife";
       nameservers = cfg.nameservers;
       useDHCP     = false;
 
       defaultGateway = {
-        address   = "${cfg.gateway}";
+        address   = cfg.gateway;
         interface = "eno1";
       };
 
       interfaces.eno1.ipv4.addresses = [{
-        address      = "${cfg.ipAddress}";
+        address      = cfg.ipAddress;
         prefixLength = cfg.ipAddressPrefix;
       }];
     };
@@ -67,6 +70,10 @@ in
     services = {
       btrfs.autoScrub.enable = true;
       fwupd.enable           = true;
+
+      nginx.virtualHosts."${config.networking.domain}".locations = {
+        "/".return = "301 https://www.${config.networking.domain}$request_uri";
+      };
     };
 
     system = {
