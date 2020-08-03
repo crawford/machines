@@ -20,7 +20,7 @@
 
         resources = [
           {
-            names    = [ "client" ];
+            names    = [ "client" "webclient" ];
             compress = true;
           }
           {
@@ -78,6 +78,17 @@
                   };
                 };
                 in "200 '${builtins.toJSON client}'";
+            };
+          };
+        };
+
+        "element.${config.networking.domain}" = {
+          enableACME = true;
+          forceSSL   = true;
+
+          root = pkgs.element-web.override {
+            conf.default_server_config."m.homeserver" = {
+              "server_name" = "${config.networking.domain}";
             };
           };
         };
