@@ -186,10 +186,15 @@ in
       };
     };
 
+    systemd.services."docker-doxie-upload" = {
+      after   = [ "mnt-valdez-media.mount" ];
+      bindsTo = [ "mnt-valdez-media.mount" ];
+    };
+
     virtualisation.libvirtd = {
-      enable = true;
-      onBoot = "ignore";
-      onShutdown = "shutdown";
+      enable        = true;
+      onBoot        = "ignore";
+      onShutdown    = "shutdown";
       qemuRunAsRoot = false;
     };
 

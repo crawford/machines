@@ -48,6 +48,8 @@ in {
       iotop.enable = true;
     };
 
+    security.acme.acceptTerms = true;
+
     services = {
       sshguard.enable = true;
 
@@ -90,8 +92,6 @@ in {
         permitRootLogin = "yes";
       };
     };
-
-    security.acme.acceptTerms = true;
 
     system = {
       stateVersion = "20.03";
