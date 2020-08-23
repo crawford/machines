@@ -6,7 +6,7 @@
     ./zsh.nix
   ];
 
-  console.useXkbConfig = true;
+  console.keyMap = "dvp";
 
   nix = {
     allowedUsers      = [ "alex" ];
