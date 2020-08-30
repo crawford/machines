@@ -6,8 +6,6 @@
     ./rust.nix
   ];
 
-  nix.maxJobs = 4;
-
   boot = {
     extraModprobeConfig = "options iwlwifi 11n_disable=1 wd_disable=1";
 
@@ -65,7 +63,6 @@
       displayManager.gdm.enable    = true;
       desktopManager.gnome3.enable = true;
       desktopManager.xterm.enable  = false;
-      synaptics.enable             = false;
     };
   };
 
