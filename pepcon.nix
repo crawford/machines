@@ -26,6 +26,8 @@
     '';
 
     xserver = {
+      enable = true;
+
       desktopManager.xterm.enable  = false;
       windowManager.awesome.enable = true;
 
@@ -33,7 +35,8 @@
         defaultSession = "none+awesome";
 
         lightdm = {
-          enable         = true;
+          enable = true;
+
           greeter.enable = true;
 
           autoLogin = {

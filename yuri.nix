@@ -59,6 +59,7 @@
     fwupd.enable           = true;
 
     xserver = {
+      enable       = true;
       layout       = "us";
       videoDrivers = [ "nvidia" ];
       xkbOptions   = "terminate:ctrl_alt_bksp, ctrl:nocaps";
