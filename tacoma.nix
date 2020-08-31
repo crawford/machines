@@ -174,6 +174,7 @@ in
     services = {
       btrfs.autoScrub.enable = true;
       fwupd.enable           = true;
+      openntpd.enable        = true;
 
       plex = {
         enable        = true;
