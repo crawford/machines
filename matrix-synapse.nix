@@ -1,16 +1,67 @@
 { config, pkgs, ... }:
 
+let
+  coturn = config.services.coturn;
+  domain = config.networking.domain;
+in
 {
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall = {
+    allowedTCPPorts = [
+      80
+      443
+      coturn.tls-listening-port
+      (coturn.tls-listening-port + 1)
+    ];
 
-  security.acme.acceptTerms = true;
+    allowedUDPPortRanges = [{
+      from = coturn.min-port;
+      to   = coturn.max-port;
+    }];
+  };
+
+  security.acme = {
+    acceptTerms = true;
+
+    certs."turn.${domain}" = {
+      allowKeysForGroup = true;
+      group             = "turnserver";
+      postRun           = "systemctl reload nginx.service; systemctl restart coturn.service";
+    };
+  };
 
   services = {
+    coturn = {
+      enable       = true;
+      lt-cred-mech = true;
+      no-cli       = true;
+      realm        = "turn.${domain}";
+      secure-stun  = true;
+
+      static-auth-secret = config.services.matrix-synapse.turn_shared_secret;
+      use-auth-secret    = true;
+
+      cert = "/var/lib/acme/turn.${domain}/fullchain.pem";
+      pkey = "/var/lib/acme/turn.${domain}/key.pem";
+
+      extraConfig = ''
+        cipher-list="HIGH"
+        no-loopback-peers
+        no-multicast-peers
+      '';
+    };
+
     matrix-synapse = {
       database_type   = "sqlite3";
       enable          = true;
       max_upload_size = "50M";
-      server_name     = "${config.networking.domain}";
+      server_name     = domain;
+
+      turn_uris = [
+        "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
+        "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
+        "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
+        "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
+      ];
 
       listeners = [{
         bind_address = "::1";
@@ -39,7 +90,7 @@
       recommendedProxySettings = true;
 
       virtualHosts = {
-        "matrix.${config.networking.domain}" = {
+        "matrix.${domain}" = {
           enableACME = true;
           forceSSL   = true;
 
@@ -49,7 +100,12 @@
           };
         };
 
-        "${config.networking.domain}" = {
+        "turn.${domain}" = {
+          enableACME = true;
+          forceSSL   = true;
+        };
+
+        "${domain}" = {
           default    = true;
           enableACME = true;
           forceSSL   = true;
@@ -60,7 +116,7 @@
 
               return =
                 let server = {
-                  "m.server" = "matrix.${config.networking.domain}:443";
+                  "m.server" = "matrix.${domain}:443";
                 };
                 in "200 '${builtins.toJSON server}'";
             };
@@ -74,7 +130,7 @@
               return =
                 let client = {
                   "m.homeserver" = {
-                    "base_url" = "https://matrix.${config.networking.domain}";
+                    "base_url" = "https://matrix.${domain}";
                   };
                 };
                 in "200 '${builtins.toJSON client}'";
@@ -82,13 +138,13 @@
           };
         };
 
-        "element.${config.networking.domain}" = {
+        "element.${domain}" = {
           enableACME = true;
           forceSSL   = true;
 
           root = pkgs.element-web.override {
             conf.default_server_config."m.homeserver" = {
-              "server_name" = "${config.networking.domain}";
+              "server_name" = domain;
             };
           };
         };
