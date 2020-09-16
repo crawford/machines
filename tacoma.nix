@@ -38,6 +38,12 @@ in
       '';
     };
 
+    forwardingIp = lib.mkOption {
+      description = ''
+        The IP address of the DNS server to which requests will be forwarded.
+      '';
+    };
+
     gateway = lib.mkOption {
       description = ''
         The IP address of the gateway.
@@ -99,7 +105,7 @@ in
           DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
           DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
           CONDITIONAL_FORWARDING         = "True";
-          CONDITIONAL_FORWARDING_IP      = "${cfg.gateway}";
+          CONDITIONAL_FORWARDING_IP      = "${cfg.forwardingIp}";
           CONDITIONAL_FORWARDING_DOMAIN  = "${cfg.domain}";
           CONDITIONAL_FORWARDING_REVERSE = "${cfg.reverseLookupDomain}";
         };
