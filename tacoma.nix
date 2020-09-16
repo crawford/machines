@@ -104,7 +104,7 @@ in
           DNSMASQ_LISTENING              = "all";
           DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
           DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
-          CONDITIONAL_FORWARDING         = "True";
+          CONDITIONAL_FORWARDING         = "true";
           CONDITIONAL_FORWARDING_IP      = "${cfg.forwardingIp}";
           CONDITIONAL_FORWARDING_DOMAIN  = "${cfg.domain}";
           CONDITIONAL_FORWARDING_REVERSE = "${cfg.reverseLookupDomain}";
