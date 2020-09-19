@@ -89,9 +89,15 @@ in
 
     docker-containers = {
       doxie-upload = {
-        image = "quay.io/crawford/doxie-upload:latest";
-        ports = [ "${cfg.auxIpAddress}:80:8080/tcp" ];
+        image   = "quay.io/crawford/doxie-upload:latest";
+        ports   = [ "${cfg.auxIpAddress}:80:8080/tcp" ];
         volumes = [ "/mnt/valdez/media/Scans:/uploads" ];
+      };
+
+      nginx = {
+        image   = "nginx:latest";
+        ports   = [ "${cfg.ipAddress}:3000:80/tcp" ];
+        volumes = [ "/mnt/valdez/media/Firmware:/usr/share/nginx/html:ro" ];
       };
 
       pihole = {
