@@ -68,7 +68,7 @@
     };
   };
 
-  time.timeZone = "US/Pacific";
+  time.timeZone = pkgs.lib.mkOverride 1100 "US/Pacific";
 
   users = {
     defaultUserShell = "${pkgs.zsh}/bin/zsh";
