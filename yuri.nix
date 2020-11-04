@@ -104,6 +104,8 @@
     tcsd.enable = true;
   };
 
+  systemd.sockets.libvirtd-tcp.wantedBy = [ "sockets.target" ];
+
   virtualisation = {
     docker = {
       autoPrune.enable = true;
@@ -114,12 +116,6 @@
     libvirtd = {
       enable     = true;
       onShutdown = "shutdown";
-
-      extraConfig = ''
-        listen_tls = 0
-        listen_tcp = 1
-        auth_tcp = "none"
-      '';
     };
   };
 
