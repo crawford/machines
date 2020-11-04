@@ -21,6 +21,11 @@
     };
   };
 
+  environment.etc = {
+    subuid.text = "alex:100000:65536";
+    subgid.text = "alex:100000:65536";
+  };
+
   networking = {
     hostName = "yuri";
 
@@ -90,6 +95,11 @@
       enable  = true;
       drivers = [ pkgs.gutenprint pkgs.hplip ];
     };
+
+    udev.extraRules = ''
+      KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0407", GROUP="wheel", TAG+="uaccess"
+      SUBSYSTEM=="usb", ACTION=="add|change", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0407", GROUP="wheel", TAG+="uaccess"
+    '';
 
     tcsd.enable = true;
   };
