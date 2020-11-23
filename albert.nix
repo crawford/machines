@@ -13,11 +13,6 @@
     efi.canTouchEfiVariables = true;
   };
 
-  environment.etc = {
-    subuid.text = "alex:100000:65536";
-    subgid.text = "alex:100000:65536";
-  };
-
   hardware = {
     bluetooth.enable   = true;
     enableAllFirmware  = true;
@@ -63,4 +58,6 @@
   system.stateVersion = "20.03";
 
   users.extraUsers.alex.extraGroups = [ "wheel" "plugdev" ];
+
+  virtualisation.podman.enable = true;
 }
