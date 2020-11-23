@@ -3,7 +3,6 @@
 {
   imports = [
     ./common.nix
-    ./podman.nix
     ./rust.nix
   ];
 
@@ -70,6 +69,8 @@
   users.users.alex.extraGroups = [ "wireshark" ];
 
   virtualisation = {
+    podman.enable = true;
+
     libvirtd = {
       enable = true;
       onShutdown = "shutdown";
