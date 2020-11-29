@@ -43,6 +43,15 @@ in {
       useDHCP                 = false;
     };
 
+    nix = {
+      autoOptimiseStore = true;
+
+      gc = {
+        automatic = true;
+        options   = "--delete-older-than 30d";
+      };
+    };
+
     programs = {
       iftop.enable = true;
       iotop.enable = true;
