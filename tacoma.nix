@@ -215,7 +215,7 @@ in
     users.users.alex.extraGroups = [ "wheel" "libvirtd" ];
 
     system = {
-      stateVersion = "20.03";
+      stateVersion = "20.09";
 
       autoUpgrade = {
         allowReboot = true;
