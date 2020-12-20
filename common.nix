@@ -60,6 +60,7 @@
 
   services = {
     sshguard.enable = true;
+    xserver.xkbVariant = "dvp";
 
     openssh = {
       enable                 = true;
