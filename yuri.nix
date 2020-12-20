@@ -65,10 +65,7 @@
 
     xserver = {
       enable       = true;
-      layout       = "us";
       videoDrivers = [ "nvidia" ];
-      xkbOptions   = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-      xkbVariant   = "dvp";
 
       desktopManager.gnome3.enable = true;
       desktopManager.xterm.enable  = false;
