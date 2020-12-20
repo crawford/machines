@@ -60,12 +60,17 @@
 
   services = {
     sshguard.enable = true;
-    xserver.xkbVariant = "dvp";
 
     openssh = {
       enable                 = true;
       passwordAuthentication = false;
       permitRootLogin        = "no";
+    };
+
+    xserver = {
+      layout     = "us";
+      xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
+      xkbVariant = "dvp";
     };
   };
 
