@@ -34,19 +34,19 @@
       displayManager = {
         defaultSession = "none+awesome";
 
+        autoLogin = {
+          enable = true;
+          user   = "alex";
+        };
+
         lightdm = {
           enable = true;
 
           greeter.enable = true;
-
-          autoLogin = {
-            enable = true;
-            user   = "alex";
-          };
         };
       };
     };
   };
 
-  system.stateVersion = "20.03";
+  system.stateVersion = "20.09";
 }
