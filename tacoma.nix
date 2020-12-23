@@ -200,6 +200,7 @@ in
             extraOptions = [
               "--dns=127.0.0.1"
               "--dns=172.18.16.6"
+              "--no-hosts"
             ];
 
             ports = [
