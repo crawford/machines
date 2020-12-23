@@ -87,54 +87,6 @@ in
       };
     };
 
-    docker-containers = {
-      doxie-upload = {
-        image   = "quay.io/crawford/doxie-upload:latest";
-        ports   = [ "${cfg.auxIpAddress}:80:8080/tcp" ];
-        volumes = [ "/mnt/valdez/media/Scans:/uploads" ];
-      };
-
-      nginx = {
-        image   = "nginx:latest";
-        ports   = [ "${cfg.ipAddress}:3000:80/tcp" ];
-        volumes = [ "/mnt/valdez/media/Firmware:/usr/share/nginx/html:ro" ];
-      };
-
-      pihole = {
-        image = "pihole/pihole:latest";
-
-        environment = {
-          TZ                             = "${config.time.timeZone}";
-          WEBPASSWORD                    = "${cfg.piholePassword}";
-          ServerIP                       = "${cfg.ipAddress}";
-          DNSMASQ_LISTENING              = "all";
-          DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
-          DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
-          CONDITIONAL_FORWARDING         = "true";
-          CONDITIONAL_FORWARDING_IP      = "${cfg.forwardingIp}";
-          CONDITIONAL_FORWARDING_DOMAIN  = "${cfg.domain}";
-          CONDITIONAL_FORWARDING_REVERSE = "${cfg.reverseLookupDomain}";
-        };
-
-        extraDockerOptions = [
-          "--dns=127.0.0.1"
-          "--dns=172.18.16.6"
-        ];
-
-        ports = [
-          "${cfg.ipAddress}:53:53/tcp"
-          "${cfg.ipAddress}:53:53/udp"
-          "${cfg.ipAddress}:80:80"
-          "${cfg.ipAddress}:443:443"
-        ];
-
-        volumes = [
-          "/var/lib/pihole/dnsmasq.d/:/etc/dnsmasq.d/"
-          "/var/lib/pihole/pihole/:/etc/pihole/"
-        ];
-      };
-    };
-
     fileSystems."/mnt/valdez/media" = {
       device = "//valdez/Media/";
       fsType = "cifs";
@@ -200,16 +152,70 @@ in
       };
     };
 
-    systemd.services."docker-doxie-upload" = {
+    systemd.services."podman-doxie-upload" = {
       after   = [ "mnt-valdez-media.mount" ];
       bindsTo = [ "mnt-valdez-media.mount" ];
     };
 
-    virtualisation.libvirtd = {
-      enable        = true;
-      onBoot        = "ignore";
-      onShutdown    = "shutdown";
-      qemuRunAsRoot = false;
+    virtualisation = {
+      libvirtd = {
+        enable        = true;
+        onBoot        = "ignore";
+        onShutdown    = "shutdown";
+        qemuRunAsRoot = false;
+      };
+
+      oci-containers = {
+        backend = "podman";
+
+        containers = {
+          doxie-upload = {
+            image   = "quay.io/crawford/doxie-upload:latest";
+            ports   = [ "${cfg.auxIpAddress}:80:8080/tcp" ];
+            volumes = [ "/mnt/valdez/media/Scans:/uploads" ];
+          };
+
+          nginx = {
+            image   = "nginx:latest";
+            ports   = [ "${cfg.ipAddress}:3000:80/tcp" ];
+            volumes = [ "/mnt/valdez/media/Firmware:/usr/share/nginx/html:ro" ];
+          };
+
+          pihole = {
+            image = "pihole/pihole:latest";
+
+            environment = {
+              TZ                             = "${config.time.timeZone}";
+              WEBPASSWORD                    = "${cfg.piholePassword}";
+              ServerIP                       = "${cfg.ipAddress}";
+              DNSMASQ_LISTENING              = "all";
+              DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
+              DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
+              CONDITIONAL_FORWARDING         = "true";
+              CONDITIONAL_FORWARDING_IP      = "${cfg.forwardingIp}";
+              CONDITIONAL_FORWARDING_DOMAIN  = "${cfg.domain}";
+              CONDITIONAL_FORWARDING_REVERSE = "${cfg.reverseLookupDomain}";
+            };
+
+            extraOptions = [
+              "--dns=127.0.0.1"
+              "--dns=172.18.16.6"
+            ];
+
+            ports = [
+              "${cfg.ipAddress}:53:53/tcp"
+              "${cfg.ipAddress}:53:53/udp"
+              "${cfg.ipAddress}:80:80"
+              "${cfg.ipAddress}:443:443"
+            ];
+
+            volumes = [
+              "/var/lib/pihole/dnsmasq.d/:/etc/dnsmasq.d/"
+              "/var/lib/pihole/pihole/:/etc/pihole/"
+            ];
+          };
+        };
+      };
     };
 
     users.users.alex.extraGroups = [ "wheel" "libvirtd" ];
