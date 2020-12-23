@@ -152,11 +152,6 @@ in
       };
     };
 
-    systemd.services."podman-doxie-upload" = {
-      after   = [ "mnt-valdez-media.mount" ];
-      bindsTo = [ "mnt-valdez-media.mount" ];
-    };
-
     virtualisation = {
       libvirtd = {
         enable        = true;
