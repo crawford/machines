@@ -2,6 +2,7 @@
 
 {
   imports = [
+    <nixos-hardware/lenovo/x250>
     ./common.nix
     ./redhat-config.nix
     ./rust.nix
