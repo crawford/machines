@@ -62,7 +62,6 @@
 
       displayManager.gdm.enable    = true;
       desktopManager.gnome3.enable = true;
-      desktopManager.xterm.enable  = false;
     };
   };
 
