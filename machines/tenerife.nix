@@ -7,8 +7,8 @@ in
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/hdd>
-    ./common.nix
-    ./matrix-synapse.nix
+    ./.
+    ../modules/matrix-synapse.nix
   ];
 
   options.tenerife = {

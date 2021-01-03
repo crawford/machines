@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./vim.nix
-    ./zsh.nix
+    modules/vim.nix
+    modules/zsh.nix
   ];
 
   console.keyMap = "dvp";
