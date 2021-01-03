@@ -32,7 +32,7 @@
     };
   };
 
-  hardware.cpu.intel.updateMicrocode = true;
+  hardware.enableRedistributableFirmware = true;
 
   programs = {
     command-not-found.enable = true;

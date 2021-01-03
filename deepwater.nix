@@ -2,6 +2,7 @@
 
 {
   imports = [
+    <nixos-hardware/lenovo/thinkpad/x250>
     ./common.nix
     ./rust.nix
   ];
@@ -22,9 +23,8 @@
   };
 
   hardware = {
-    bluetooth.enable              = true;
-    enableRedistributableFirmware = true;
-    opengl.driSupport32Bit        = true;
+    bluetooth.enable       = true;
+    opengl.driSupport32Bit = true;
 
     pulseaudio = {
       enable       = true;
