@@ -68,7 +68,6 @@
       videoDrivers = [ "nvidia" ];
 
       desktopManager.gnome3.enable = true;
-      desktopManager.xterm.enable  = false;
 
       displayManager.gdm = {
         autoSuspend = false;

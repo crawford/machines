@@ -28,7 +28,6 @@
     xserver = {
       enable = true;
 
-      desktopManager.xterm.enable  = false;
       windowManager.awesome.enable = true;
 
       displayManager = {
