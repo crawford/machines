@@ -3,8 +3,8 @@
 {
   imports = [
     <nixos-hardware/lenovo/thinkpad/x250>
-    ./common.nix
-    ./rust.nix
+    ./.
+    ../../modules/rust.nix
   ];
 
   boot = {

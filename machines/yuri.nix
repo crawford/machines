@@ -5,9 +5,9 @@
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/ssd>
-    ./common.nix
-    ./redhat-config.nix
-    ./rust.nix
+    ./.
+    ../modules/redhat.nix
+    ../modules/rust.nix
   ];
 
   boot = {

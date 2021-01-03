@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ./common.nix
-    ./rust.nix
+    ./.
+    ../../modules/rust.nix
   ];
 
   environment.shellAliases.tmux          = "tmux -2";
