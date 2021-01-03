@@ -5,6 +5,7 @@
     <nixos-hardware/lenovo/thinkpad/x250>
     ./.
     ../../modules/rust.nix
+    ../../modules/xfce.nix
   ];
 
   boot = {
@@ -23,8 +24,7 @@
   };
 
   hardware = {
-    bluetooth.enable       = true;
-    opengl.driSupport32Bit = true;
+    bluetooth.enable = true;
 
     pulseaudio = {
       enable       = true;
@@ -56,13 +56,6 @@
     };
 
     printing.enable = true;
-
-    xserver = {
-      enable = true;
-
-      displayManager.gdm.enable    = true;
-      desktopManager.gnome3.enable = true;
-    };
   };
 
   users.users.alex.extraGroups = [ "wireshark" ];
