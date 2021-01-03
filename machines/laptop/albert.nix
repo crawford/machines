@@ -8,28 +8,7 @@
     ../../modules/rust.nix
   ];
 
-  boot.loader = {
-    grub.enable              = false;
-    systemd-boot.enable      = true;
-    efi.canTouchEfiVariables = true;
-  };
-
-  hardware = {
-    bluetooth.enable   = true;
-    enableAllFirmware  = true;
-
-    pulseaudio = {
-      enable = true;
-      package = pkgs.pulseaudioFull;
-    };
-  };
-
-  networking = {
-    hostName              = "albert";
-    networkmanager.enable = true;
-  };
-
-  powerManagement.powertop.enable = true;
+  networking.hostName = "albert";
 
   programs.zsh.promptColor = "magenta";
 
@@ -51,8 +30,6 @@
   };
 
   system.stateVersion = "20.03";
-
-  users.extraUsers.alex.extraGroups = [ "wheel" "plugdev" ];
 
   virtualisation.podman.enable = true;
 }

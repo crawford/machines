@@ -81,7 +81,7 @@
 
     users.alex = {
       isNormalUser = true;
-      extraGroups  = [ "wheel" ];
+      extraGroups  = [ "wheel" "plugdev" ];
     };
   };
 }
