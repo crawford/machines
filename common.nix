@@ -68,9 +68,9 @@
     };
 
     xserver = {
-      layout     = "us";
+      layout     = "us,us";
       xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-      xkbVariant = "dvp";
+      xkbVariant = "dvp,";
     };
   };
 
