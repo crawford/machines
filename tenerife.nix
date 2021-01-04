@@ -48,7 +48,6 @@ in
     boot.loader = {
      efi.canTouchEfiVariables = true;
      systemd-boot.enable      = true;
-     timeout                  = 1;
     };
 
     networking = {

@@ -18,7 +18,10 @@
     };
   };
 
-  boot.cleanTmpDir = true;
+  boot = {
+    cleanTmpDir    = true;
+    loader.timeout = 1;
+  };
 
   environment = {
     homeBinInPath = true;
