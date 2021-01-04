@@ -218,7 +218,7 @@ in
       };
     };
 
-    users.users.alex.extraGroups = [ "wheel" "libvirtd" ];
+    users.users.alex.extraGroups = [ "libvirtd" ];
 
     system = {
       stateVersion = "20.09";
