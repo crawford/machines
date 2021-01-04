@@ -6,6 +6,7 @@
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/ssd>
     ./.
+    ../modules/gnome.nix
     ../modules/redhat.nix
     ../modules/rust.nix
   ];
@@ -67,14 +68,10 @@
     fwupd.enable           = true;
 
     xserver = {
-      enable       = true;
       videoDrivers = [ "nvidia" ];
-
-      desktopManager.gnome3.enable = true;
 
       displayManager.gdm = {
         autoSuspend = false;
-        enable      = true;
         wayland     = false;
       };
     };
