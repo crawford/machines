@@ -8,6 +8,7 @@ in
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/hdd>
     ./.
+    modules/server.nix
   ];
 
   options.tacoma = {
@@ -142,7 +143,6 @@ in
 
     services = {
       btrfs.autoScrub.enable = true;
-      fwupd.enable           = true;
       openntpd.enable        = true;
 
       plex = {

@@ -9,13 +9,7 @@
     modules/xfce.nix
   ];
 
-  networking.hostName        = "deepwater";
-  nixpkgs.config.allowUnfree = true;
-
-  hardware.sane = {
-    enable        = true;
-    extraBackends = [ pkgs.hplipWithPlugin ];
-  };
+  networking.hostName = "deepwater";
 
   programs = {
     zsh.promptColor = "blue";
@@ -31,8 +25,6 @@
       enable  = true;
       nssmdns = true;
     };
-
-    printing.enable = true;
   };
 
   system.stateVersion = "20.09";

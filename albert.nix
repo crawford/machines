@@ -10,19 +10,10 @@
     modules/rust.nix
   ];
 
-  networking.hostName        = "albert";
-  nixpkgs.config.allowUnfree = true;
-  programs.zsh.promptColor   = "magenta";
+  networking.hostName      = "albert";
+  programs.zsh.promptColor = "magenta";
 
-  services = {
-    btrfs.autoScrub.enable = true;
-    fwupd.enable           = true;
-
-    printing = {
-      drivers = [ pkgs.gutenprint pkgs.hplip ];
-      enable  = true;
-    };
-  };
+  services.btrfs.autoScrub.enable = true;
 
   system.stateVersion = "20.03";
 
