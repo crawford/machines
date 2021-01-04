@@ -1,5 +1,3 @@
-{ config, pkgs, ... }:
-
 {
   imports = [
     <nixos-hardware/lenovo/thinkpad/x250>
