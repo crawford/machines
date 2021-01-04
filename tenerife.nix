@@ -8,6 +8,7 @@ in
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/hdd>
     ./.
+    modules/btrfs.nix
     modules/matrix.nix
     modules/server.nix
   ];
@@ -70,12 +71,8 @@ in
 
     programs.zsh.promptColor = "yellow";
 
-    services = {
-      btrfs.autoScrub.enable = true;
-
-      nginx.virtualHosts."${config.networking.domain}".locations = {
-        "/".return = "301 https://www.${config.networking.domain}$request_uri";
-      };
+    services.nginx.virtualHosts."${config.networking.domain}".locations = {
+      "/".return = "301 https://www.${config.networking.domain}$request_uri";
     };
 
     system = {

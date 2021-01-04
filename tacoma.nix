@@ -8,6 +8,7 @@ in
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/hdd>
     ./.
+    modules/btrfs.nix
     modules/server.nix
   ];
 
@@ -142,8 +143,7 @@ in
     programs.zsh.promptColor = "red";
 
     services = {
-      btrfs.autoScrub.enable = true;
-      openntpd.enable        = true;
+      openntpd.enable = true;
 
       plex = {
         enable        = true;
