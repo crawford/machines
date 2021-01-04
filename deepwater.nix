@@ -4,8 +4,9 @@
   imports = [
     <nixos-hardware/lenovo/thinkpad/x250>
     ./.
-    ../../modules/rust.nix
-    ../../modules/xfce.nix
+    modules/laptop.nix
+    modules/rust.nix
+    modules/xfce.nix
   ];
 
   networking.hostName = "deepwater";
