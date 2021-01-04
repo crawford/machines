@@ -4,6 +4,7 @@
   imports = [
     <nixos-hardware/lenovo/thinkpad/x250>
     ./.
+    modules/btrfs.nix
     modules/laptop.nix
     modules/rust.nix
     modules/wireshark.nix

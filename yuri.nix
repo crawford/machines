@@ -6,6 +6,7 @@
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/ssd>
     ./.
+    modules/btrfs.nix
     modules/gnome.nix
     modules/printer.nix
     modules/redhat.nix
@@ -68,8 +69,6 @@
   };
 
   services = {
-    btrfs.autoScrub.enable = true;
-
     xserver = {
       videoDrivers = [ "nvidia" ];
 
@@ -104,7 +103,6 @@
     docker = {
       autoPrune.enable = true;
       enable           = true;
-      storageDriver    = "btrfs";
     };
 
     libvirtd = {

@@ -4,6 +4,7 @@
   imports = [
     <nixos-hardware/lenovo/x250>
     ./.
+    modules/btrfs.nix
     modules/gnome.nix
     modules/laptop.nix
     modules/redhat.nix
@@ -12,8 +13,6 @@
 
   networking.hostName      = "albert";
   programs.zsh.promptColor = "magenta";
-
-  services.btrfs.autoScrub.enable = true;
 
   system.stateVersion = "20.03";
 
