@@ -3,19 +3,18 @@
 {
   imports = [
     ./.
+    modules/awesome.nix
     modules/rust.nix
   ];
-
-  environment.shellAliases.tmux          = "tmux -2";
-  networking.hostName                    = "pepcon";
-  nix.maxJobs                            = 4;
-  virtualisation.virtualbox.guest.enable = true;
-  programs.zsh.promptColor               = "#ff8700";
 
   boot.loader = {
     systemd-boot.enable      = true;
     efi.canTouchEfiVariables = true;
   };
+
+  environment.shellAliases.tmux = "tmux -2";
+  networking.hostName           = "pepcon";
+  programs.zsh.promptColor      = "#ff8700";
 
   services = {
     udev.extraRules = ''
@@ -24,27 +23,13 @@
       KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="f001", MODE="0666"
     '';
 
-    xserver = {
+    xserver.displayManager.autoLogin = {
       enable = true;
-
-      windowManager.awesome.enable = true;
-
-      displayManager = {
-        defaultSession = "none+awesome";
-
-        autoLogin = {
-          enable = true;
-          user   = "alex";
-        };
-
-        lightdm = {
-          enable = true;
-
-          greeter.enable = true;
-        };
-      };
+      user   = "alex";
     };
   };
 
   system.stateVersion = "20.09";
+
+  virtualisation.virtualbox.guest.enable = true;
 }
