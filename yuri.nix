@@ -6,9 +6,9 @@
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/ssd>
     ./.
-    ../modules/gnome.nix
-    ../modules/redhat.nix
-    ../modules/rust.nix
+    modules/gnome.nix
+    modules/redhat.nix
+    modules/rust.nix
   ];
 
   boot = {

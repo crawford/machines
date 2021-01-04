@@ -1,12 +1,10 @@
 { pkgs, ...}:
 
 {
-  imports = [ ../. ];
-
   boot.loader = {
+    efi.canTouchEfiVariables = true;
     grub.enable              = false;
     systemd-boot.enable      = true;
-    efi.canTouchEfiVariables = true;
   };
 
   hardware = {

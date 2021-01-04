@@ -4,9 +4,10 @@
   imports = [
     <nixos-hardware/lenovo/x250>
     ./.
-    ../../modules/gnome.nix
-    ../../modules/redhat.nix
-    ../../modules/rust.nix
+    modules/gnome.nix
+    modules/laptop.nix
+    modules/redhat.nix
+    modules/rust.nix
   ];
 
   networking.hostName = "albert";
