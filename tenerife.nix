@@ -9,6 +9,7 @@ in
     <nixos-hardware/common/pc/hdd>
     ./.
     modules/matrix.nix
+    modules/server.nix
   ];
 
   options.tenerife = {
@@ -71,7 +72,6 @@ in
 
     services = {
       btrfs.autoScrub.enable = true;
-      fwupd.enable           = true;
 
       nginx.virtualHosts."${config.networking.domain}".locations = {
         "/".return = "301 https://www.${config.networking.domain}$request_uri";

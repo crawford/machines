@@ -1,6 +1,10 @@
 { pkgs, ...}:
 
 {
+  imports = [
+    ./printer.nix
+  ];
+
   boot.loader = {
     efi.canTouchEfiVariables = true;
     grub.enable              = false;
@@ -18,4 +22,5 @@
 
   networking.networkmanager.enable = true;
   powerManagement.powertop.enable  = true;
+  services.fwupd.enable            = true;
 }

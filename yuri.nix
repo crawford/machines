@@ -7,8 +7,10 @@
     <nixos-hardware/common/pc/ssd>
     ./.
     modules/gnome.nix
+    modules/printer.nix
     modules/redhat.nix
     modules/rust.nix
+    modules/server.nix
   ];
 
   boot = {
@@ -67,7 +69,6 @@
 
   services = {
     btrfs.autoScrub.enable = true;
-    fwupd.enable           = true;
 
     xserver = {
       videoDrivers = [ "nvidia" ];
@@ -87,11 +88,6 @@
     avahi = {
       enable   = true;
       nssmdns  = true;
-    };
-
-    printing = {
-      enable  = true;
-      drivers = [ pkgs.gutenprint pkgs.hplip ];
     };
 
     udev.extraRules = ''
