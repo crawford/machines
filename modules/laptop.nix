@@ -8,8 +8,7 @@
   };
 
   hardware = {
-    bluetooth.enable   = true;
-    enableAllFirmware  = true;
+    bluetooth.enable = true;
 
     pulseaudio = {
       enable  = true;

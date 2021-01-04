@@ -18,8 +18,6 @@
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
-
   boot.cleanTmpDir = true;
 
   environment = {
@@ -31,8 +29,6 @@
       utc = "TZ=UTC date";
     };
   };
-
-  hardware.enableRedistributableFirmware = true;
 
   programs = {
     command-not-found.enable = true;

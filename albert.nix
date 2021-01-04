@@ -10,9 +10,9 @@
     modules/rust.nix
   ];
 
-  networking.hostName = "albert";
-
-  programs.zsh.promptColor = "magenta";
+  networking.hostName        = "albert";
+  nixpkgs.config.allowUnfree = true;
+  programs.zsh.promptColor   = "magenta";
 
   services = {
     btrfs.autoScrub.enable = true;
