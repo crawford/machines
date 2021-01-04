@@ -4,6 +4,7 @@
   imports = [
     <nixos-hardware/lenovo/x250>
     ./.
+    ../../modules/gnome.nix
     ../../modules/redhat.nix
     ../../modules/rust.nix
   ];
@@ -19,13 +20,6 @@
     printing = {
       drivers = [ pkgs.gutenprint pkgs.hplip ];
       enable  = true;
-    };
-
-    xserver = {
-      enable = true;
-
-      displayManager.gdm.enable    = true;
-      desktopManager.gnome3.enable = true;
     };
   };
 
