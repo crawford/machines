@@ -9,7 +9,8 @@
     modules/xfce.nix
   ];
 
-  networking.hostName = "deepwater";
+  networking.hostName        = "deepwater";
+  nixpkgs.config.allowUnfree = true;
 
   hardware.sane = {
     enable        = true;
