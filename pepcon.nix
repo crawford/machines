@@ -1,3 +1,5 @@
+{ pkgs, ... }:
+
 {
   imports = [
     ./.
@@ -13,6 +15,11 @@
   environment.shellAliases.tmux = "tmux -2";
   networking.hostName           = "pepcon";
   programs.zsh.promptColor      = "#ff8700";
+
+  environment.systemPackages = with pkgs; [
+    libusb
+    pkg-config
+  ];
 
   services = {
     udev.extraRules = ''
