@@ -13,7 +13,6 @@
   };
 
   environment.shellAliases.tmux = "tmux -2";
-  networking.hostName           = "pepcon";
   programs.zsh.promptColor      = "#ff8700";
 
   environment.systemPackages = with pkgs; [
@@ -21,7 +20,27 @@
     pkg-config
   ];
 
+  networking = {
+    hostName = "pepcon";
+    interfaces.enp0s8.ipv4.addresses = [{
+      address = "172.20.1.1";
+      prefixLength = 24;
+    }];
+  };
+
   services = {
+    dhcpd4 = {
+      enable     = true;
+      interfaces = [ "enp0s8" ];
+
+      extraConfig = ''
+        option routers 172.20.1.1;
+        subnet 172.20.1.0 netmask 255.255.255.0 {
+          range 172.20.1.32 172.20.1.64;
+        }
+      '';
+    };
+
     udev.extraRules = ''
       ATTR{idVendor}=="1366", ATTR{idProduct}=="1010", MODE="0666"
       ATTR{idVendor}=="1366", ATTR{idProduct}=="1015", MODE="0666"
