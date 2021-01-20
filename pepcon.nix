@@ -21,7 +21,9 @@
   ];
 
   networking = {
-    hostName = "pepcon";
+    firewall.extraCommands = "iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE";
+    hostName               = "pepcon";
+
     interfaces.enp0s8.ipv4.addresses = [{
       address = "172.20.1.1";
       prefixLength = 24;
