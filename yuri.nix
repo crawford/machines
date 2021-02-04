@@ -28,11 +28,6 @@
     };
   };
 
-  environment.etc = {
-    subuid.text = "alex:100000:65536";
-    subgid.text = "alex:100000:65536";
-  };
-
   networking = {
     hostName = "yuri";
 
