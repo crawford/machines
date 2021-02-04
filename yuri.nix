@@ -94,10 +94,7 @@
   systemd.sockets.libvirtd-tcp.wantedBy = [ "sockets.target" ];
 
   virtualisation = {
-    docker = {
-      autoPrune.enable = true;
-      enable           = true;
-    };
+    podman.enable = true;
 
     libvirtd = {
       enable     = true;
