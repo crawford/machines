@@ -78,12 +78,6 @@
       };
     };
 
-    openssh = {
-      enable                 = true;
-      passwordAuthentication = false;
-      permitRootLogin        = "no";
-    };
-
     avahi = {
       enable   = true;
       nssmdns  = true;
