@@ -12,13 +12,18 @@
     efi.canTouchEfiVariables = true;
   };
 
-  environment.shellAliases.tmux = "tmux -2";
-  programs.zsh.promptColor      = "#ff8700";
+  environment = {
+    shellAliases.tmux = "tmux -2";
 
-  environment.systemPackages = with pkgs; [
-    libusb
-    pkg-config
-  ];
+    systemPackages = with pkgs; [
+      libusb
+      pkg-config
+    ];
+
+    variables = {
+      GTK_THEME = "Adwaita-dark";
+    };
+  };
 
   networking = {
     firewall.extraCommands = "iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE";
@@ -29,6 +34,8 @@
       prefixLength = 24;
     }];
   };
+
+  programs.zsh.promptColor = "#ff8700";
 
   services = {
     dhcpd4 = {
