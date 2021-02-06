@@ -54,6 +54,7 @@
       ATTR{idVendor}=="1366", ATTR{idProduct}=="1010", MODE="0666"
       ATTR{idVendor}=="1366", ATTR{idProduct}=="1015", MODE="0666"
       ATTR{idVendor}=="0483", ATTR{idProduct}=="374b", MODE="0666"
+      ATTR{idVendor}=="21a9", ATTR{idProduct}=="1005", MODE="0666"
       KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="f001", MODE="0666"
     '';
 
