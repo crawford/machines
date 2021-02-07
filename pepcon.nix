@@ -48,5 +48,16 @@
     KERNEL=="hidraw*", ATTRS{idVendor}=="c251", ATTRS{idProduct}=="f001", MODE="0666"
   '';
 
+  users.extraUsers.alex.extraGroups = [ "libvirtd" ];
+
+  virtualisation = {
+    podman.enable = true;
+
+    libvirtd = {
+      enable     = true;
+      onShutdown = "shutdown";
+    };
+  };
+
   system.stateVersion = "20.09";
 }
