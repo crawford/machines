@@ -7,12 +7,12 @@
     modules/laptop.nix
     modules/redhat.nix
     modules/rust.nix
+    modules/udev.nix
   ];
 
-  networking.hostName      = "albert";
-  programs.zsh.promptColor = "magenta";
+  networking.hostName          = "albert";
+  programs.zsh.promptColor     = "magenta";
+  virtualisation.podman.enable = true;
 
   system.stateVersion = "20.03";
-
-  virtualisation.podman.enable = true;
 }
