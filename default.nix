@@ -66,10 +66,6 @@
       permitRootLogin        = "no";
     };
 
-    udev.extraRules = ''
-      SUBSYSTEM=="usb", ATTR{idVendor}=="3297", ATTR{idProduct}=="1969", GROUP="plugdev"
-    '';
-
     xserver = {
       layout     = "us,us";
       xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
@@ -81,11 +77,10 @@
 
   users = {
     defaultUserShell = "${pkgs.zsh}/bin/zsh";
-    groups.plugdev   = {};
 
     users.alex = {
       isNormalUser = true;
-      extraGroups  = [ "wheel" "plugdev" ];
+      extraGroups  = [ "wheel" ];
     };
   };
 }

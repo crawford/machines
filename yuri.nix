@@ -100,7 +100,7 @@
   users.extraUsers = {
     aaron.shell      = "${pkgs.bashInteractive}/bin/bash";
     adahiya          = {};
-    alex.extraGroups = [ "wheel" "plugdev" "libvirtd" ];
+    alex.extraGroups = [ "libvirtd" ];
   };
 
   system = {
