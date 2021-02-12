@@ -1,8 +1,9 @@
 { config, pkgs, ... }:
 
 let
-  coturn = config.services.coturn;
-  domain = config.networking.domain;
+  coturn   = config.services.coturn;
+  domain   = config.networking.domain;
+  hostName = config.networking.hostName;
 in
 {
   networking.firewall = {
@@ -23,9 +24,8 @@ in
     acceptTerms = true;
 
     certs."turn.${domain}" = {
-      allowKeysForGroup = true;
-      group             = "turnserver";
-      postRun           = "systemctl reload nginx.service; systemctl restart coturn.service";
+      group   = "nginx";
+      postRun = "systemctl reload nginx.service; systemctl restart coturn.service";
     };
   };
 
@@ -105,7 +105,7 @@ in
           forceSSL   = true;
         };
 
-        "${domain}" = {
+        "${hostName}.${domain}" = {
           default    = true;
           enableACME = true;
           forceSSL   = true;
