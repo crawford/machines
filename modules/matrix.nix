@@ -1,9 +1,8 @@
 { config, pkgs, ... }:
 
 let
-  coturn   = config.services.coturn;
-  domain   = config.networking.domain;
-  hostName = config.networking.hostName;
+  coturn = config.services.coturn;
+  domain = config.networking.domain;
 in
 {
   networking.firewall = {
@@ -105,7 +104,7 @@ in
           forceSSL   = true;
         };
 
-        "${hostName}.${domain}" = {
+        "${domain}" = {
           default    = true;
           enableACME = true;
           forceSSL   = true;
