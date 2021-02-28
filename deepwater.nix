@@ -17,8 +17,6 @@
     nssmdns = true;
   };
 
-  system.stateVersion = "20.09";
-
   virtualisation = {
     podman.enable = true;
 
