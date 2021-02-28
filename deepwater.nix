@@ -3,10 +3,10 @@
     <nixos-hardware/lenovo/thinkpad/x250>
     ./.
     modules/btrfs.nix
+    modules/gnome.nix
     modules/laptop.nix
     modules/rust.nix
     modules/wireshark.nix
-    modules/xfce.nix
   ];
 
   networking.hostName      = "deepwater";
