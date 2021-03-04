@@ -8,6 +8,7 @@
     modules/redhat.nix
     modules/rust.nix
     modules/udev.nix
+    modules/wireshark.nix
   ];
 
   networking.hostName          = "albert";
