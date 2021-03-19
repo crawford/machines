@@ -10,6 +10,7 @@ in
     ./.
     modules/btrfs.nix
     modules/server.nix
+    modules/transmission.nix
   ];
 
   options.tacoma = {
