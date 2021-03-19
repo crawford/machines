@@ -85,6 +85,8 @@ in
   };
 
   config = {
+    nixpkgs.config.allowUnfree = true;
+
     boot = {
       kernelParams   = [ "console=ttyS1,115200n8 mds=full,nosmt" ];
 
