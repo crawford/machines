@@ -8,6 +8,7 @@
     ./.
     modules/btrfs.nix
     modules/gnome.nix
+    modules/linker.nix
     modules/printer.nix
     modules/redhat.nix
     modules/rust.nix
@@ -103,14 +104,5 @@
     alex.extraGroups = [ "libvirtd" ];
   };
 
-  system = {
-    stateVersion = "20.09";
-
-    activationScripts.lib64 = ''
-      echo "setting up /lib64..."
-      mkdir -p /lib64
-      ln -sfT ${pkgs.stdenv.glibc}/lib/ld-linux-x86-64.so.2 /lib64/.ld-linux-x86-64.so.2
-      mv -Tf /lib64/.ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2
-    '';
-  };
+  system.stateVersion = "20.09";
 }
