@@ -5,11 +5,7 @@
 
     displayManager = {
       defaultSession = "none+awesome";
-
-      lightdm = {
-        enable         = true;
-        greeter.enable = true;
-      };
+      lightdm.enable = true;
     };
   };
 }
