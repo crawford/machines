@@ -91,6 +91,7 @@ in
       recommendedOptimisation  = true;
       recommendedGzipSettings  = true;
       recommendedProxySettings = true;
+      clientMaxBodySize        = "0";
 
       virtualHosts = {
         "matrix.${domain}" = {
@@ -98,8 +99,10 @@ in
           forceSSL   = true;
 
           locations = {
-            "/".return           = "404";
-            "/_matrix".proxyPass = "http://[::1]:8448";
+            "/".return = "404";
+
+            "/_matrix".proxyPass         = "http://[::1]:8448";
+            "/_synapse/client".proxyPass = "http://[::1]:8448";
           };
         };
 
