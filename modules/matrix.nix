@@ -55,6 +55,10 @@ in
       max_upload_size = "50M";
       server_name     = domain;
 
+      extraConfig = ''
+        suppress_key_server_warning: true
+      '';
+
       turn_uris = [
         "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
         "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
@@ -70,7 +74,7 @@ in
 
         resources = [
           {
-            names    = [ "client" "webclient" ];
+            names    = [ "client" ];
             compress = true;
           }
           {
