@@ -6,6 +6,7 @@
     modules/gnome.nix
     modules/laptop.nix
     modules/rust.nix
+    modules/udev.nix
     modules/wireshark.nix
   ];
 
