@@ -1,7 +1,7 @@
 {
   imports = [
     <nixos-hardware/lenovo/thinkpad/x250>
-    ./.
+    ./common.nix
     modules/btrfs.nix
     modules/gnome.nix
     modules/laptop.nix

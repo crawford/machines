@@ -7,7 +7,7 @@ in
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/hdd>
-    ./.
+    ./common.nix
     modules/btrfs.nix
     modules/matrix.nix
     modules/server.nix
