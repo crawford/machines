@@ -5,7 +5,7 @@
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/ssd>
-    ./.
+    ./common.nix
     modules/btrfs.nix
     modules/gnome.nix
     modules/rust.nix
