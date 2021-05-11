@@ -7,7 +7,7 @@
     modules/zsh.nix
   ];
 
-  console.keyMap = "dvp";
+  console.keyMap = pkgs.lib.mkOverride 1100 "dvp";
 
   nix = {
     allowedUsers      = [ "alex" ];

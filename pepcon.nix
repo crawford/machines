@@ -19,6 +19,8 @@
     version     = 2;
   };
 
+  console.keyMap = "us";
+
   environment = {
     shellAliases.tmux = "tmux -2";
 
