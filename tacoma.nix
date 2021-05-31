@@ -9,6 +9,7 @@ in
     <nixos-hardware/common/pc/hdd>
     ./common.nix
     modules/btrfs.nix
+    modules/doxie-upload.nix
     modules/server.nix
     modules/transmission.nix
   ];
@@ -148,6 +149,12 @@ in
     services = {
       openntpd.enable = true;
 
+      doxie-upload = {
+        address   = "${cfg.auxIpAddress}";
+        root      = "/mnt/valdez/media/Scans";
+        verbosity = "-v";
+      };
+
       plex = {
         enable        = true;
         managePlugins = false;
@@ -171,12 +178,6 @@ in
         backend = "podman";
 
         containers = {
-          doxie-upload = {
-            image   = "quay.io/crawford/doxie-upload:latest";
-            ports   = [ "${cfg.auxIpAddress}:80:8080/tcp" ];
-            volumes = [ "/mnt/valdez/media/Scans:/uploads" ];
-          };
-
           nginx = {
             image   = "nginx:latest";
             ports   = [ "${cfg.ipAddress}:3000:80/tcp" ];
