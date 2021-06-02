@@ -2,9 +2,9 @@
 
 {
   imports = [
-    modules/tmux.nix
-    modules/vim.nix
-    modules/zsh.nix
+    ./tmux.nix
+    ./vim.nix
+    ./zsh.nix
   ];
 
   console.keyMap = pkgs.lib.mkOverride 1100 "dvp";
