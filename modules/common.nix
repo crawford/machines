@@ -7,7 +7,7 @@
     ./zsh.nix
   ];
 
-  console.keyMap = pkgs.lib.mkOverride 1100 "dvp";
+  console.keyMap = pkgs.lib.mkOverride 1100 "dvorak-programmer";
 
   nix = {
     allowedUsers      = [ "alex" ];
