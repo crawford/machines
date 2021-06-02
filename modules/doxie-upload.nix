@@ -54,9 +54,11 @@ in {
     environment.systemPackages = [ doxie-upload ];
 
     systemd.services."doxie-upload" = {
-      script     = "${doxie-upload}/bin/doxie-upload $@";
-      scriptArgs = "--port=80 --address=${cfg.address} --root=${cfg.root} ${cfg.verbosity}";
       wantedBy   = [ "multi-user.target" ];
+
+      serviceConfig.ExecStart = ''
+        ${doxie-upload}/bin/doxie-upload --port=80 --address=${cfg.address} --root=${cfg.root} ${cfg.verbosity}
+      '';
     };
   };
 }
