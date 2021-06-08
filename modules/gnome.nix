@@ -1,4 +1,6 @@
 {
+  systemd.services."NetworkManager-wait-online".enable = false;
+
   services = {
     gnome.sushi.enable = true;
 
