@@ -8,9 +8,9 @@ let
     version = "0.1.0";
 
     src = pkgs.fetchFromGitHub {
-      owner = "crawford";
-      repo = pname;
-      rev = version;
+      owner  = "crawford";
+      repo   = pname;
+      rev    = version;
       sha256 = "1bmfawjv4qqzk5gfwvj08flwzyvir9lhv1pcvzajcg9dbyzphz7f";
     };
 
@@ -18,9 +18,9 @@ let
 
     meta = {
       description = "A simple file upload server compatible with Doxie scanners";
-      homepage = "https://github.com/crawford/doxie-upload";
-      changelog = "https://github.com/crawford/doxie-upload/raw/${version}/CHANGELOG.md";
-      license = [ lib.licenses.asl20 ];
+      homepage    = "https://github.com/crawford/doxie-upload";
+      changelog   = "https://github.com/crawford/doxie-upload/raw/${version}/CHANGELOG.md";
+      license     = [ lib.licenses.asl20 ];
     };
   };
 in {
@@ -54,7 +54,7 @@ in {
     environment.systemPackages = [ doxie-upload ];
 
     systemd.services."doxie-upload" = {
-      wantedBy   = [ "multi-user.target" ];
+      wantedBy = [ "multi-user.target" ];
 
       serviceConfig.ExecStart = ''
         ${doxie-upload}/bin/doxie-upload --port=80 --address=${cfg.address} --root=${cfg.root} ${cfg.verbosity}
