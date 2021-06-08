@@ -73,8 +73,12 @@ in {
         upstreams                = cfg.upstreams;
 
         commonHttpConfig = ''
-          map $host $name {
-            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: backend: "${hostname} ${backend};") cfg.hostmap)}
+          map $host $upstream_name {
+            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: backend: "${hostname} ${builtins.head (lib.splitString "-" backend)};") cfg.hostmap)}
+          }
+
+          map $host $upstream_scheme {
+            ${lib.concatStringsSep "\n" (lib.mapAttrsToList (hostname: backend: "${hostname} ${lib.last (lib.splitString "-" backend)};") cfg.hostmap)}
           }
         '';
 
@@ -88,7 +92,7 @@ in {
           ];
 
           locations."/" = {
-            proxyPass       = "https://$name-https";
+            proxyPass       = "$upstream_scheme://$upstream_name-$upstream_scheme";
             proxyWebsockets = true;
           };
 
