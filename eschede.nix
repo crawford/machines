@@ -96,7 +96,18 @@ in {
             proxyWebsockets = true;
           };
 
-          serverAliases = builtins.filter (hostname: hostname != "-") (builtins.attrNames cfg.hostmap);
+          serverAliases = builtins.filter (hostname: hostname != "-" && hostname != "hass.home.${cfg.domain}") (builtins.attrNames cfg.hostmap);
+        };
+
+        virtualHosts."hass.home.${cfg.domain}" = {
+          listen = [
+            { addr = "0.0.0.0"; port = 80; }
+          ];
+
+          locations."/" = {
+            proxyPass       = "$upstream_scheme://$upstream_name-$upstream_scheme";
+            proxyWebsockets = true;
+          };
         };
       };
 
