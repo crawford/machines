@@ -31,5 +31,17 @@
         extraPackages = py: with py; [ async-upnp-client ];
       }).overrideAttrs (_: { doInstallCheck = false; });
     };
+
+    udev.packages = [
+      (pkgs.writeTextFile {
+        destination = "/etc/udev/rules.d/70-zwave-dongle.rules";
+        name        = "zwave-dongle-udev-rule";
+
+        text = ''
+          # Sigma Designs, Inc. Aeotec Z-Stick Gen5 (ZW090) - UZB
+          SUBSYSTEM=="tty", ATTRS{idVendor}=="0658", ATTRS{idProduct}=="0200", USER="zwavejs"
+        '';
+      })
+    ];
   };
 }
