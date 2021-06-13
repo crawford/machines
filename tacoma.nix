@@ -180,7 +180,7 @@ in
         containers = {
           nginx = {
             image   = "nginx:latest";
-            ports   = [ "${cfg.ipAddress}:3000:80/tcp" ];
+            ports   = [ "${cfg.ipAddress}:4000:80/tcp" ];
             volumes = [ "/mnt/valdez/media/Firmware:/usr/share/nginx/html:ro" ];
           };
 
