@@ -10,6 +10,7 @@ in
     modules/btrfs.nix
     modules/common.nix
     modules/doxie-upload.nix
+    modules/home-assistant.nix
     modules/server.nix
     modules/transmission.nix
   ];
