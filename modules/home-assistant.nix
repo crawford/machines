@@ -21,14 +21,15 @@
 
         default_config = { };
         denonavr       = { };
+        homekit        = { };
         octoprint      = { };
         unifi          = { };
         zwave_js       = { };
       };
 
       package = (pkgs.home-assistant.override {
-        # unifi, denonavr, and maybe others need this module
-        extraPackages = py: with py; [ async-upnp-client ];
+        # unifi, denonavr, homekit and maybe others need these modules
+        extraPackages = py: with py; [ async-upnp-client aiohomekit pkgs.ffmpeg ];
       }).overrideAttrs (_: { doInstallCheck = false; });
     };
 
