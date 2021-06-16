@@ -10,6 +10,7 @@
     modules/gnome.nix
     modules/rust.nix
     modules/server.nix
+    modules/udev.nix
   ];
 
   boot.loader.grub = {
