@@ -84,6 +84,13 @@ in
         The domain to be used in reverse DNS lookups (e.g. in-addr.arpa).
       '';
     };
+
+    serviceId = lib.mkOption {
+      description = ''
+        The VLAN ID of the Service network.
+      '';
+      type = lib.types.ints.between 0 4095;
+    };
   };
 
   config = {
@@ -139,9 +146,16 @@ in
         }
       ];
 
-      vlans.dmz = {
-        id        = cfg.dmzId;
-        interface = "uplink";
+      vlans = {
+        dmz = {
+          id        = cfg.dmzId;
+          interface = "uplink";
+        };
+
+        services = {
+          id        = cfg.serviceId;
+          interface = "uplink";
+        };
       };
     };
 
