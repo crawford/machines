@@ -161,8 +161,6 @@ in
     programs.zsh.promptColor = "red";
 
     services = {
-      openntpd.enable = true;
-
       doxie-upload = {
         address   = "${cfg.auxIpAddress}";
         root      = "/mnt/valdez/media/Scans";
