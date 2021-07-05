@@ -2,6 +2,14 @@
 
 # Note: rules that use uaccess must be ordered before 73-seat-late.rules
 let
+  giantGecko = pkgs.writeTextFile {
+    destination = "/etc/udev/rules.d/73-giant-gecko.rules";
+    name        = "giant-gecko-rule";
+
+    text = ''
+      SUBSYSTEM=="usb", ATTR{idVendor}=="1366", ATTR{idProduct}=="1015", TAG+="uaccess"
+    '';
+  };
   marquee = pkgs.writeTextFile {
     destination = "/etc/udev/rules.d/99-marquee.rules";
     name        = "marquee-udev-rule";
@@ -21,5 +29,5 @@ let
   };
 in
 {
-  services.udev.packages = [ marquee moonlander ];
+  services.udev.packages = [ giantGecko marquee moonlander ];
 }
