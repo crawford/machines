@@ -2,10 +2,13 @@
 
 {
   nixpkgs.config.vim.ftNixSupport = true;
-  programs.vim.defaultEditor      = true;
 
-  environment.systemPackages = [
-    (pkgs.vim_configurable.customize {
+  environment.shellAliases.vimdiff = "vim -d";
+
+  programs.vim = {
+    defaultEditor = true;
+
+    package = pkgs.vim_configurable.customize {
       name = "vim";
 
       vimrcConfig = {
@@ -57,6 +60,6 @@
           set number relativenumber
         '';
       };
-    })
-  ];
+    };
+  };
 }
