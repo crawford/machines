@@ -27,7 +27,15 @@ let
       SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="df11", TAG+="uaccess"
     '';
   };
+  saleae = pkgs.writeTextFile {
+    destination = "/etc/udev/rules.d/71-saleae.rules";
+    name        = "saleae-udev-rule";
+
+    text = ''
+      ATTR{idVendor}=="21a9", ATTR{idProduct}=="1005", TAG+="uaccess"
+    '';
+  };
 in
 {
-  services.udev.packages = [ giantGecko marquee moonlander ];
+  services.udev.packages = [ giantGecko marquee moonlander saleae ];
 }
