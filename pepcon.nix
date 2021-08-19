@@ -32,17 +32,9 @@
   };
 
   networking = {
-    firewall.extraCommands = "iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE";
-    hostName               = "pepcon";
+    hostName = "pepcon";
 
-    interfaces.enp7s0 = {
-      useDHCP = true;
-
-      ipv4.addresses = [{
-        address = "192.168.0.1";
-        prefixLength = 24;
-      }];
-    };
+    interfaces.enp7s0.useDHCP = true;
   };
 
   programs.zsh.promptColor = "#ff8700";
