@@ -56,6 +56,8 @@ in {
     systemd.services."doxie-upload" = {
       wantedBy = [ "multi-user.target" ];
 
+      unitConfig.RequiresMountsFor = cfg.root;
+
       serviceConfig.ExecStart = ''
         ${doxie-upload}/bin/doxie-upload --port=80 --address=${cfg.address} --root=${cfg.root} ${cfg.verbosity}
       '';
