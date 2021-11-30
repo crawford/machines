@@ -88,7 +88,7 @@ in {
           ];
 
           locations."/" = {
-            proxyPass       = "https://$name-https";
+            proxyPass       = "https://$name";
             proxyWebsockets = true;
           };
 
