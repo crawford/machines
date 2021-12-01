@@ -5,6 +5,7 @@
     <nixos-hardware/common/cpu/intel>
     <nixos-hardware/common/pc>
     <nixos-hardware/common/pc/ssd>
+    modules/alacritty.nix
     modules/btrfs.nix
     modules/common.nix
     modules/gnome.nix
