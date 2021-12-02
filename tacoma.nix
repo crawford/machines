@@ -167,6 +167,31 @@ in
         verbosity = "-v";
       };
 
+      nginx = {
+        clientMaxBodySize        = "0";
+        enable                   = true;
+        eventsConfig             = "worker_connections 1024;";
+        proxyResolveWhileRunning = true;
+        recommendedOptimisation  = true;
+        recommendedProxySettings = true;
+        recommendedTlsSettings   = true;
+        resolver.addresses       = [ "${cfg.auxIpAddress}" ];
+
+        virtualHosts."firmware.${cfg.domain}" = {
+          useACMEHost = "wildcard.${cfg.domain}";
+
+          listen = [
+            { addr = cfg.ipAddress; port = 80; }
+            { addr = cfg.ipAddress; port = 443; ssl = true; }
+          ];
+
+          locations."/" = {
+            extraConfig = "autoindex on;";
+            root        = /mnt/valdez/media/Firmware;
+          };
+        };
+      };
+
       plex = {
         enable        = true;
         managePlugins = false;
@@ -175,6 +200,15 @@ in
       unifi = {
         enable       = true;
         unifiPackage = pkgs.unifi;
+      };
+    };
+
+    security.acme.certs = {
+      "wildcard.home.acrawford.com" = {
+        credentialsFile = /etc/nixos/digitalocean-secrets;
+        dnsProvider     = "digitalocean";
+        domain          = "*.${cfg.domain}";
+        group           = config.services.nginx.user;
       };
     };
 
@@ -193,12 +227,6 @@ in
         backend = "podman";
 
         containers = {
-          nginx = {
-            image   = "nginx:latest";
-            ports   = [ "${cfg.ipAddress}:3000:80/tcp" ];
-            volumes = [ "/mnt/valdez/media/Firmware:/usr/share/nginx/html:ro" ];
-          };
-
           pihole = {
             image = "pihole/pihole:latest";
 
