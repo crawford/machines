@@ -187,7 +187,7 @@ in
 
           locations."/" = {
             extraConfig = "autoindex on;";
-            root        = /mnt/valdez/media/Firmware;
+            root        = "/mnt/valdez/media/Firmware";
           };
         };
       };
@@ -205,7 +205,7 @@ in
 
     security.acme.certs = {
       "wildcard.home.acrawford.com" = {
-        credentialsFile = /etc/nixos/digitalocean-secrets;
+        credentialsFile = "/etc/nixos/digitalocean-secrets";
         dnsProvider     = "digitalocean";
         domain          = "*.${cfg.domain}";
         group           = config.services.nginx.user;
