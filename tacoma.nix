@@ -161,7 +161,8 @@ in
 
     services = {
       doxie-upload = {
-        address   = "${cfg.auxIpAddress}";
+        address   = "127.0.0.1";
+        port      = 1080;
         root      = "/mnt/valdez/media/Scans";
         verbosity = "-v";
       };

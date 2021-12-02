@@ -37,6 +37,12 @@ in {
       type        = lib.types.bool;
     };
 
+    port = lib.mkOption {
+      default     = true;
+      description = "Port on which to listen for connections";
+      type        = lib.types.port;
+    };
+
     root = lib.mkOption {
       description = "Directory in which uploaded scans are saved";
       type        = lib.types.path;
@@ -59,7 +65,7 @@ in {
       unitConfig.RequiresMountsFor = cfg.root;
 
       serviceConfig.ExecStart = ''
-        ${doxie-upload}/bin/doxie-upload --port=80 --address=${cfg.address} --root=${cfg.root} ${cfg.verbosity}
+        ${doxie-upload}/bin/doxie-upload --port=${toString cfg.port} --address=${cfg.address} --root=${cfg.root} ${cfg.verbosity}
       '';
     };
   };
