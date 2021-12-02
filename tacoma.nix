@@ -205,7 +205,7 @@ in
             environment = {
               TZ                             = "${config.time.timeZone}";
               WEBPASSWORD                    = "${cfg.piholePassword}";
-              ServerIP                       = "${cfg.ipAddress}";
+              ServerIP                       = "${cfg.auxIpAddress}";
               DNSMASQ_LISTENING              = "all";
               DNS1                           = "${builtins.elemAt cfg.dnsServers 0}";
               DNS2                           = "${builtins.elemAt cfg.dnsServers 1}";
@@ -222,10 +222,10 @@ in
             ];
 
             ports = [
-              "${cfg.ipAddress}:53:53/tcp"
-              "${cfg.ipAddress}:53:53/udp"
-              "${cfg.ipAddress}:80:80"
-              "${cfg.ipAddress}:443:443"
+              "${cfg.auxIpAddress}:53:53/tcp"
+              "${cfg.auxIpAddress}:53:53/udp"
+              "${cfg.auxIpAddress}:80:80"
+              "${cfg.auxIpAddress}:443:443"
             ];
 
             volumes = [
