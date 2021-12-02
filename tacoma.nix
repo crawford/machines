@@ -96,7 +96,7 @@ in
     nixpkgs.config.allowUnfree = true;
 
     boot = {
-      kernelParams   = [ "console=ttyS1,115200n8 mds=full,nosmt" ];
+      kernelParams = [ "console=ttyS1,115200n8" "mds=full,nosmt" ];
 
       loader = {
         efi.canTouchEfiVariables = true;
@@ -184,7 +184,8 @@ in
         enable        = true;
         onBoot        = "ignore";
         onShutdown    = "shutdown";
-        qemuRunAsRoot = false;
+
+        qemu.runAsRoot = false;
       };
 
       oci-containers = {

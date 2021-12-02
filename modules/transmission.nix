@@ -2,7 +2,8 @@
   services.transmission = {
     enable       = true;
     openFirewall = true;
-    port         = 9091;
+
+    settings.rpc-port = 9091;
   };
 
   users.users.alex.extraGroups = [ "transmission" ];
