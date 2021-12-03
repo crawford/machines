@@ -128,6 +128,8 @@ in
         interfaces         = [ "eno1" "eno2" ];
       };
 
+      bridges.brdmz.interfaces = [ "dmz" ];
+
       defaultGateway = {
         address   = "${cfg.gateway}";
         interface = "uplink";
