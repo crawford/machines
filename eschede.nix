@@ -32,7 +32,7 @@ in {
         grub = {
           enable  = true;
           version = 2;
-          device  = "/dev/sda";
+          device  = "/dev/vda";
         };
       };
     };
