@@ -105,7 +105,7 @@ in
     };
 
     fileSystems."/mnt/valdez/media" = {
-      device = "//valdez/Media/";
+      device = "//valdez.host.${cfg.domain}/Media/";
       fsType = "cifs";
 
       options = [
