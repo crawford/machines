@@ -60,8 +60,6 @@ in
       TRAPALRM () {
         zle reset-prompt
       }
-
-      set -o vi
     '';
 
     promptInit = ''

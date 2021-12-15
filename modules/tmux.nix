@@ -2,7 +2,6 @@
   programs.tmux = {
     enable       = true;
     historyLimit = 50000;
-    keyMode      = "vi";
     terminal     = "screen-256color";
 
     extraConfig = ''
