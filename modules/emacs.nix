@@ -15,7 +15,11 @@
     enable        = true;
     defaultEditor = true;
 
-    package = (pkgs.emacsPackagesFor pkgs.emacsPgtkGcc).emacsWithPackages (epkgs: (with epkgs; [
+    package = (pkgs.emacsPackagesFor (pkgs.emacsPgtkGcc.overrideAttrs (attrs: {
+      postInstall = (attrs.postInstall or "") + ''
+        rm $out/share/applications/emacs.desktop
+      '';
+    }))).emacsWithPackages (epkgs: (with epkgs; [
       nix-mode
       rust-mode
     ]));
