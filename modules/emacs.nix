@@ -14,6 +14,10 @@
   services.emacs = {
     enable        = true;
     defaultEditor = true;
-    package       = pkgs.emacsPgtkGcc;
+
+    package = (pkgs.emacsPackagesFor pkgs.emacsPgtkGcc).emacsWithPackages (epkgs: (with epkgs; [
+      nix-mode
+      rust-mode
+    ]));
   };
 }
