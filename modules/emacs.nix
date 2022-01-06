@@ -9,6 +9,8 @@
     }))
   ];
 
+  environment.systemPackages = [ pkgs.ispell ];
+
   programs.vim.defaultEditor = lib.mkForce false;
 
   services.emacs = {
