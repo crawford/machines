@@ -12,6 +12,7 @@ in
     modules/doxie-upload.nix
     modules/server.nix
     modules/transmission.nix
+    modules/ups.nix
   ];
 
   options.tacoma = {
