@@ -7,8 +7,6 @@
     ./zsh.nix
   ];
 
-  console.keyMap = pkgs.lib.mkOverride 1100 "dvorak-programmer";
-
   nix = {
     allowedUsers      = [ "alex" ];
     autoOptimiseStore = true;
@@ -44,18 +42,13 @@
   security.sudo.wheelNeedsPassword = false;
 
   services = {
-    sshguard.enable = true;
+    sshguard.enable    = true;
+    xserver.xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
 
     openssh = {
       enable                 = true;
       passwordAuthentication = false;
       permitRootLogin        = "no";
-    };
-
-    xserver = {
-      layout     = "us,us";
-      xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
-      xkbVariant = "dvp,";
     };
   };
 
