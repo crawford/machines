@@ -37,5 +37,13 @@
   networking.hostName = "titanic";
 
   programs.ssh.startAgent = true;
+
+  services.xserver.desktopManager.gnome.extraGSettingsOverrides = ''
+    [org.gnome.desktop.interface]
+    text-scaling-factor=1.2
+
+    [org.gnome.desktop.a11y.applications]
+    screen-keyboard-enabled=true
+  '';
 }
 
