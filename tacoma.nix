@@ -195,10 +195,7 @@ in
         };
       };
 
-      plex = {
-        enable        = true;
-        managePlugins = false;
-      };
+      plex.enable = true;
 
       unifi = {
         enable       = true;
