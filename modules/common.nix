@@ -8,12 +8,14 @@
   ];
 
   nix = {
-    allowedUsers      = [ "alex" ];
-    autoOptimiseStore = true;
-
     gc = {
       automatic = true;
       options   = "--delete-older-than 30d";
+    };
+
+    settings = {
+      allowed-users       = [ "alex" ];
+      auto-optimise-store = true;
     };
   };
 
