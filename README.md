@@ -6,7 +6,7 @@ These are the Nix derivations for my machines, with common functionality broken 
 
 Add the channel:
 
-    sudo nix-channel --add https://github.com/crawford/machines/archive.tar.gz machines
+    sudo nix-channel --add https://github.com/crawford/machines/archive/main.tar.gz machines
 
 Reference the modules:
 
