@@ -14,6 +14,9 @@
         rm $out/share/applications/emacs.desktop
       '';
     })).pkgs.withPackages (epkgs: (with epkgs; [
+      eglot
+      ivy
+      magit
       nix-mode
       rust-mode
     ]));
