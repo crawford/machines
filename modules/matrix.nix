@@ -36,7 +36,7 @@ in
       realm        = "turn.${domain}";
       secure-stun  = true;
 
-      static-auth-secret = config.services.matrix-synapse.turn_shared_secret;
+      static-auth-secret = config.services.matrix-synapse.settings.turn_shared_secret;
       use-auth-secret    = true;
 
       cert = "/var/lib/acme/turn.${domain}/fullchain.pem";
@@ -50,39 +50,40 @@ in
     };
 
     matrix-synapse = {
-      database_type   = "sqlite3";
-      enable          = true;
-      max_upload_size = "50M";
-      server_name     = domain;
+      enable = true;
 
-      extraConfig = ''
-        suppress_key_server_warning: true
-      '';
+      settings = {
+        database.name   = "sqlite3";
+        max_upload_size = "50M";
+        server_name     = domain;
 
-      turn_uris = [
-        "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
-        "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
-        "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
-        "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
-      ];
+        suppress_key_server_warning = true;
 
-      listeners = [{
-        bind_address = "::1";
-        port         = 8448;
-        tls          = false;
-        x_forwarded  = true;
-
-        resources = [
-          {
-            names    = [ "client" ];
-            compress = true;
-          }
-          {
-            names    = [ "federation" ];
-            compress = false;
-          }
+        turn_uris = [
+          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
+          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
+          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
+          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
         ];
-      }];
+
+        listeners = [{
+          bind_addresses = [ "::1" ];
+          port         = 8448;
+          tls          = false;
+          x_forwarded  = true;
+
+          resources = [
+            {
+              names    = [ "client" ];
+              compress = true;
+            }
+            {
+              names    = [ "federation" ];
+              compress = false;
+            }
+          ];
+        }];
+      };
     };
 
     nginx = {
