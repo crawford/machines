@@ -5,6 +5,10 @@ let
   domain = config.networking.domain;
 in
 {
+  environment.systemPackages = with pkgs; [
+    mautrix-signal
+  ];
+
   networking.firewall = {
     allowedTCPPorts = [
       80
@@ -29,6 +33,8 @@ in
   };
 
   services = {
+    signald.enable = true;
+
     coturn = {
       enable       = true;
       lt-cred-mech = true;
@@ -60,6 +66,10 @@ in
         suppress_key_server_warning = true;
 
         extraConfigFiles = [ "/var/lib/matrix-synapse/secrets.conf" ];
+
+        app_service_config_files = [
+          "/var/lib/mautrix-signal/registration.yaml"
+        ];
 
         listeners = [{
           bind_addresses = [ "::1" ];
@@ -159,5 +169,30 @@ in
         };
       };
     };
+  };
+
+  systemd.services.mautrix-signal = {
+    description = "mautrix-signal bridge";
+    enable      = true;
+
+    after    = [ "matrix-synapse.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    unitConfig.JoinsNamespaceOf = "signald.service";
+
+    serviceConfig = {
+      ExecStart        = "${pkgs.mautrix-signal}/bin/mautrix-signal";
+      PrivateTmp       = true;
+      User             = "mautrix-signal";
+      WorkingDirectory = "~";
+    };
+  };
+
+  users.users.mautrix-signal = {
+    createHome   = true;
+    group        = "nogroup";
+    extraGroups  = [ "signald" ];
+    home         = "/var/lib/mautrix-signal";
+    isSystemUser = true;
   };
 }
