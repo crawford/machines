@@ -59,12 +59,7 @@ in
 
         suppress_key_server_warning = true;
 
-        turn_uris = [
-          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
-          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
-          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
-          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
-        ];
+        extraConfigFiles = [ "/var/lib/matrix-synapse/secrets.conf" ];
 
         listeners = [{
           bind_addresses = [ "::1" ];
@@ -83,6 +78,13 @@ in
             }
           ];
         }];
+
+        turn_uris = [
+          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
+          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
+          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
+          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
+        ];
       };
     };
 
