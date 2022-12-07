@@ -9,19 +9,26 @@ in
     mautrix-signal
   ];
 
-  networking.firewall = {
-    allowedTCPPorts = [
-      80
-      443
-      coturn.tls-listening-port
-      (coturn.tls-listening-port + 1)
-    ];
-
-    allowedUDPPortRanges = [{
+  networking.firewall = let
+    coturnRange = {
       from = coturn.min-port;
       to   = coturn.max-port;
-    }];
-  };
+    };
+    coturnListeningPorts = [
+      coturn.tls-listening-port
+      coturn.alt-tls-listening-port
+    ];
+  in
+    {
+      allowedUDPPorts = coturnListeningPorts;
+      allowedTCPPorts = coturnListeningPorts ++ [
+        80
+        443
+      ];
+
+      allowedUDPPortRanges = [ coturnRange ];
+      allowedTCPPortRanges = [ coturnRange ];
+    };
 
   security.acme = {
     acceptTerms = true;
@@ -37,10 +44,13 @@ in
 
     coturn = {
       enable       = true;
-      lt-cred-mech = true;
       no-cli       = true;
+      no-tcp-relay = true;
       realm        = "turn.${domain}";
       secure-stun  = true;
+
+      min-port = 49000;
+      max-port = 50000;
 
       static-auth-secret = config.services.matrix-synapse.settings.turn_shared_secret;
       use-auth-secret    = true;
