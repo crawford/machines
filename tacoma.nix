@@ -1,6 +1,16 @@
 { config, lib, pkgs, ... }:
 
-let cfg = config.tacoma;
+let
+  cfg = config.tacoma;
+  mediaMount = {
+    where    = "/mnt/valdez/media";
+    what     = "//valdez.host.${cfg.domain}/Media/";
+    type     = "cifs";
+    options  = "credentials=/etc/nixos/smb-secrets";
+    wantedBy = [ "multi-user.target" ];
+
+    unitConfig.Upholds     = "plex.service";
+  };
 in
 {
   imports = [
@@ -105,16 +115,13 @@ in
       };
     };
 
-    fileSystems."/mnt/valdez/media" = {
-      device = "//valdez.host.${cfg.domain}/Media/";
-      fsType = "cifs";
+    fileSystems."${mediaMount.where}" = {
+      device = mediaMount.what;
+      fsType = mediaMount.type;
 
       options = [
-        "x-systemd.automount"
-        "noauto"
-        "x-systemd.device-timeout=5s"
-        "x-systemd.mount-timeout=5s"
-        "credentials=/etc/nixos/smb-secrets"
+        "nofail"
+        mediaMount.options
       ];
     };
 
@@ -213,7 +220,14 @@ in
       };
     };
 
-    systemd.services.plex.unitConfig.RequiresMountsFor = "/mnt/valdez/media/Media";
+    systemd = {
+      mounts = [ mediaMount ];
+
+      services.plex.unitConfig = {
+        PartOf            = "mnt-valdez-media.mount";
+        RequiresMountsFor = "/mnt/valdez/media/Media";
+      };
+    };
 
     virtualisation = {
       libvirtd = {
