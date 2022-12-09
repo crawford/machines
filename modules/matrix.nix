@@ -78,7 +78,7 @@ in
         extraConfigFiles = [ "/var/lib/matrix-synapse/secrets.conf" ];
 
         app_service_config_files = [
-          "/var/lib/mautrix-signal/registration.yaml"
+          "/var/lib/matrix-synapse/signal-registration.yaml"
         ];
 
         listeners = [{
