@@ -10,6 +10,14 @@ let
       SUBSYSTEM=="usb", ATTR{idVendor}=="1366", ATTR{idProduct}=="1015", TAG+="uaccess"
     '';
   };
+  lpcLink2 = pkgs.writeTextFile {
+    destination = "/etc/udev/rules.d/99-lpc-link2.rules";
+    name        = "lpc-link2-rule";
+
+    text = ''
+      SUBSYSTEM=="usb", ATTR{idVendor}=="c251", ATTR{idProduct}=="f001", TAG+="uaccess"
+    '';
+  };
   marquee = pkgs.writeTextFile {
     destination = "/etc/udev/rules.d/99-marquee.rules";
     name        = "marquee-udev-rule";
@@ -37,5 +45,11 @@ let
   };
 in
 {
-  services.udev.packages = [ giantGecko marquee moonlander saleae ];
+  services.udev.packages = [
+    giantGecko
+    lpcLink2
+    marquee
+    moonlander
+    saleae
+  ];
 }
