@@ -19,6 +19,7 @@
       magit
       nix-mode
       rust-mode
+      vterm
     ]));
   };
 }
