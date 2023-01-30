@@ -185,7 +185,7 @@ in
     description = "mautrix-signal bridge";
     enable      = true;
 
-    after    = [ "matrix-synapse.service" ];
+    after    = [ "matrix-synapse.service" "signald.service" ];
     wantedBy = [ "multi-user.target" ];
 
     unitConfig.JoinsNamespaceOf = "signald.service";
