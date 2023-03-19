@@ -34,7 +34,7 @@ in
   security.acme = {
     acceptTerms = true;
 
-    certs."turn.${domain}" = {
+    certs."${coturn.realm}" = {
       group   = "nginx";
       postRun = "systemctl reload nginx.service; systemctl restart coturn.service";
     };
@@ -56,8 +56,8 @@ in
       static-auth-secret = config.services.matrix-synapse.settings.turn_shared_secret;
       use-auth-secret    = true;
 
-      cert = "/var/lib/acme/turn.${domain}/fullchain.pem";
-      pkey = "/var/lib/acme/turn.${domain}/key.pem";
+      cert = "/var/lib/acme/${coturn.realm}/fullchain.pem";
+      pkey = "/var/lib/acme/${coturn.realm}/key.pem";
 
       extraConfig = ''
         cipher-list="HIGH"
@@ -112,10 +112,10 @@ in
         }];
 
         turn_uris = [
-          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=udp"
-          "turn:turn.${domain}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
-          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
-          "turn:turn.${domain}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
+          "turn:${coturn.realm}:${builtins.toString coturn.tls-listening-port}?transport=udp"
+          "turn:${coturn.realm}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
+          "turn:${coturn.realm}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
+          "turn:${coturn.realm}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
         ];
       };
     };
@@ -141,7 +141,7 @@ in
           };
         };
 
-        "turn.${domain}" = {
+        "${coturn.realm}" = {
           enableACME = true;
           forceSSL   = true;
         };
