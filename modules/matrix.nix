@@ -198,11 +198,15 @@ in
     };
   };
 
-  users.users.mautrix-signal = {
-    createHome   = true;
-    group        = "nogroup";
-    extraGroups  = [ "signald" ];
-    home         = "/var/lib/mautrix-signal";
-    isSystemUser = true;
+  users.users = {
+    mautrix-signal = {
+      createHome   = true;
+      group        = "nogroup";
+      extraGroups  = [ "signald" ];
+      home         = "/var/lib/mautrix-signal";
+      isSystemUser = true;
+    };
+
+    turnserver.extraGroups = [ "nginx" ];
   };
 }
