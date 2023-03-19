@@ -112,10 +112,10 @@ in
         }];
 
         turn_uris = [
-          "turn:${coturn.realm}:${builtins.toString coturn.tls-listening-port}?transport=udp"
-          "turn:${coturn.realm}:${builtins.toString coturn.tls-listening-port}?transport=tcp"
-          "turn:${coturn.realm}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=udp"
-          "turn:${coturn.realm}:${builtins.toString (coturn.tls-listening-port + 1)}?transport=tcp"
+          # "turns:${coturn.realm}?transport=tcp"
+          # "turns:${coturn.realm}?transport=udp"
+          "turn:${coturn.realm}?transport=tcp"
+          "turn:${coturn.realm}?transport=udp"
         ];
       };
     };
