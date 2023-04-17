@@ -20,6 +20,8 @@
       markdown-mode
       nov
       nix-mode
+      org
+      org-roam
       rust-mode
       vterm
     ]));
