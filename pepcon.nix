@@ -8,6 +8,7 @@
     modules/alacritty.nix
     modules/btrfs.nix
     modules/common.nix
+    modules/ddcci.nix
     modules/emacs.nix
     modules/gnome.nix
     modules/rust.nix
