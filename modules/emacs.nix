@@ -17,6 +17,8 @@
       eglot
       ivy
       magit
+      markdown-mode
+      nov
       nix-mode
       rust-mode
       vterm
