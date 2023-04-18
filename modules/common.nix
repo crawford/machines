@@ -47,6 +47,7 @@
 
     openssh = {
       enable                 = true;
+      openFirewall           = true;
       passwordAuthentication = false;
       permitRootLogin        = "no";
     };
