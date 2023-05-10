@@ -7,6 +7,7 @@ in
 {
   environment.systemPackages = with pkgs; [
     mautrix-signal
+    mautrix-whatsapp
   ];
 
   networking.firewall = let
@@ -91,6 +92,7 @@ in
 
         app_service_config_files = [
           "/var/lib/matrix-synapse/signal-registration.yaml"
+          "/var/lib/matrix-synapse/whatsapp-registration.yaml"
         ];
 
         listeners = [{
@@ -193,24 +195,65 @@ in
     };
   };
 
-  systemd.services.mautrix-signal = {
-    description = "mautrix-signal bridge";
-    enable      = true;
+  systemd.services = {
+    mautrix-signal = {
+      description = "mautrix-signal bridge";
+      enable      = true;
 
-    after    = [ "matrix-synapse.service" "signald.service" ];
-    wantedBy = [ "multi-user.target" ];
+      after    = [ "matrix-synapse.service" "signald.service" ];
+      wantedBy = [ "multi-user.target" ];
 
-    unitConfig.JoinsNamespaceOf = "signald.service";
+      unitConfig.JoinsNamespaceOf = "signald.service";
 
-    serviceConfig = {
-      ExecStart        = "${pkgs.mautrix-signal}/bin/mautrix-signal";
-      PrivateTmp       = true;
-      User             = "mautrix-signal";
-      WorkingDirectory = "~";
+      serviceConfig = {
+        ExecStart        = "${pkgs.mautrix-signal}/bin/mautrix-signal";
+        PrivateTmp       = true;
+        User             = "mautrix-signal";
+        WorkingDirectory = "~";
+      };
+    };
+
+    mautrix-whatsapp = {
+      description = "mautrix-whatsapp bridge";
+      enable      = true;
+
+      after    = [ "matrix-synapse.service" ];
+      wantedBy = [ "multi-user.target" ];
+
+      serviceConfig = {
+        ExecStart        = "${pkgs.mautrix-whatsapp}/bin/mautrix-whatsapp";
+        User             = "mautrix-whatsapp";
+        WorkingDirectory = "~";
+        Restart          = "on-failure";
+        RestartSec       = "30s";
+
+        ReadWritePaths          = "/var/lib/mautrix-whatsapp";
+        NoNewPrivileges         = true;
+        MemoryDenyWriteExecute  = true;
+        PrivateDevices          = true;
+        PrivateTmp              = true;
+        ProtectHome             = true;
+        ProtectSystem           = "strict";
+        ProtectControlGroups    = true;
+        RestrictSUIDSGID        = true;
+        RestrictRealtime        = true;
+        LockPersonality         = true;
+        ProtectKernelLogs       = true;
+        ProtectKernelTunables   = true;
+        ProtectHostname         = true;
+        ProtectKernelModules    = true;
+        PrivateUsers            = true;
+        ProtectClock            = true;
+        SystemCallArchitectures = "native";
+        SystemCallErrorNumber   = "EPERM";
+        SystemCallFilter        = "@system-service";
+      };
     };
   };
 
   users.users = {
+    turnserver.extraGroups = [ "nginx" ];
+
     mautrix-signal = {
       createHome   = true;
       group        = "nogroup";
@@ -219,6 +262,11 @@ in
       isSystemUser = true;
     };
 
-    turnserver.extraGroups = [ "nginx" ];
+    mautrix-whatsapp = {
+      createHome   = true;
+      group        = "nogroup";
+      home         = "/var/lib/mautrix-whatsapp";
+      isSystemUser = true;
+    };
   };
 }
