@@ -42,7 +42,6 @@
   security.sudo.wheelNeedsPassword = false;
 
   services = {
-    sshguard.enable    = true;
     xserver.xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
 
     openssh = {
