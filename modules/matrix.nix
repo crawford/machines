@@ -82,7 +82,11 @@ in
       enable = true;
 
       settings = {
-        database.name   = "sqlite3";
+        database = {
+          name      = "psycopg2";
+          args.user = "matrix-synapse";
+        };
+
         max_upload_size = "50M";
         server_name     = domain;
 
@@ -192,6 +196,25 @@ in
           };
         };
       };
+    };
+
+    postgresql = let
+      conn = config.services.matrix-synapse.settings.database.args;
+    in
+    {
+      enable  = true;
+      package = pkgs.postgresql_14;
+
+      initialScript = pkgs.writeText "matrix-init" ''
+        CREATE DATABASE "${conn.database}"
+          OWNER "${conn.user}"
+          ENCODING 'UTF8'
+          TEMPLATE template0
+          LC_COLLATE 'C'
+          LC_CTYPE 'C';
+        CREATE USER "${conn.user}";
+        GRANT ALL PRIVILEGES ON DATABASE "${conn.database}" TO "${conn.user}";
+      '';
     };
   };
 
