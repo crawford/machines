@@ -14,7 +14,16 @@ let
       sha256 = "1bmfawjv4qqzk5gfwvj08flwzyvir9lhv1pcvzajcg9dbyzphz7f";
     };
 
-    cargoSha256 = "142dlwjqbgfxfy28irqizbl8p29g2iirczdspp1bd1zqj1n6ddgn";
+    cargoLock = {
+      lockFile = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/crawford/doxie-upload/${version}/Cargo.lock";
+        sha256 = "sha256-iIlxJ8HC5fKcbTxCO3WaRyvAsu7A9Zx/O1hXlfSkOEc=";
+      };
+
+      outputHashes = {
+        "multipart-async-0.0.2" = "sha256-C3vrrYf7zeQGfGqHtoCdosWhC+sF3Xmx9g/MEFzrXMc=";
+      };
+    };
 
     meta = {
       description = "A simple file upload server compatible with Doxie scanners";
