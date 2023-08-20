@@ -14,6 +14,7 @@
     settings = {
       allowed-users       = [ "alex" ];
       auto-optimise-store = true;
+      tarball-ttl         = 0;
     };
   };
 
