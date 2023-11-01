@@ -1,10 +1,19 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
+  cfg    = config.matrix;
   coturn = config.services.coturn;
   domain = config.networking.domain;
 in
 {
+  options.matrix = {
+    syncProxySecret = lib.mkOption {
+      description = ''
+        The value of SYNCV3_SECRET
+      '';
+    };
+  };
+
   config = {
     environment.systemPackages = with pkgs; [
       mautrix-signal
@@ -143,6 +152,9 @@ in
             locations = {
               "/".return = "404";
 
+              "/client/".proxyPass                                         = "http://127.0.0.1:8008";
+              "/_matrix/client/unstable/org.matrix.msc3575/sync".proxyPass = "http://127.0.0.1:8008";
+
               "/_matrix".proxyPass         = "http://[::1]:8448";
               "/_synapse/client".proxyPass = "http://[::1]:8448";
             };
@@ -162,11 +174,9 @@ in
               "= /.well-known/matrix/server" = {
                 extraConfig = "add_header Content-Type application/json;";
 
-                return =
-                  let server = {
-                        "m.server" = "matrix.${domain}:443";
-                      };
-                  in "200 '${builtins.toJSON server}'";
+                return = "200 '${builtins.toJSON {
+                  "m.server" = "matrix.${domain}:443";
+                }}'";
               };
 
               "= /.well-known/matrix/client" = {
@@ -175,13 +185,10 @@ in
                   add_header Access-Control-Allow-Origin *;
                 '';
 
-                return =
-                  let client = {
-                        "m.homeserver" = {
-                          "base_url" = "https://matrix.${domain}";
-                        };
-                      };
-                  in "200 '${builtins.toJSON client}'";
+                return = "200 '${builtins.toJSON {
+                  "m.homeserver"."base_url"        = "https://matrix.${domain}";
+                  "org.matrix.msc3575.proxy"."url" = "https://matrix.${domain}";
+                }}'";
               };
             };
           };
@@ -234,6 +241,26 @@ in
           PrivateTmp       = true;
           User             = "mautrix-signal";
           WorkingDirectory = "~";
+        };
+      };
+
+      matrix-sliding-sync = {
+        description = "sliding sync proxy";
+        enable      = true;
+
+        after    = [ "matrix-synapse.service" ];
+        wantedBy = [ "multi-user.target" ];
+
+        serviceConfig = {
+          Environment = ''
+            "SYNCV3_SERVER=http://localhost:8448" \
+            "SYNCV3_DB=user=matrix-synapse host=/run/postgresql dbname=syncv3 sslmode=disable" \
+            "SYNCV3_LOG_LEVEL=warn" \
+            "SYNCV3_SECRET=${cfg.syncProxySecret}" \
+            "SYNCV3_BINDADDR=127.0.0.1:8008"
+          '';
+          ExecStart = "${pkgs.matrix-sliding-sync}/bin/syncv3";
+          User = "matrix-synapse";
         };
       };
 
