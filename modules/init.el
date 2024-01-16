@@ -181,10 +181,10 @@
   "Check if the system is using the dark theme"
   (let* ((command (if (memq window-system '(ns))
                       "defaults read -globalDomain AppleInterfaceStyle"
-                    "gsettings get org.gnome.desktop.interface gtk-theme"))
+                    "gsettings get org.gnome.desktop.interface color-scheme"))
          (default-directory "/")
          (output (shell-command-to-string command)))
-    (if (or (string= "'Adwaita-dark'\n" output)
+    (if (or (string= "'prefer-dark'\n" output)
             (string= "Dark\n" output))
         t)))
 
