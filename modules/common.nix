@@ -19,8 +19,8 @@
   };
 
   boot = {
-    cleanTmpDir    = true;
-    loader.timeout = 1;
+    tmp.cleanOnBoot = true;
+    loader.timeout  = 1;
   };
 
   environment = {
@@ -48,8 +48,11 @@
     openssh = {
       enable                 = true;
       openFirewall           = true;
-      passwordAuthentication = false;
-      permitRootLogin        = "no";
+
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin        = "no";
+      };
     };
   };
 
