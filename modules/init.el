@@ -179,12 +179,14 @@
 ;; Automatically change the theme to match the system
 (defun system-dark-theme-p ()
   "Check if the system is using the dark theme"
-  (if (string=
-       "Dark\n"
-       (let ((default-directory "/"))
-         (shell-command-to-string
-  "/usr/bin/defaults read -globalDomain AppleInterfaceStyle")))
-      t))
+  (let* ((command (if (memq window-system '(ns))
+                      "defaults read -globalDomain AppleInterfaceStyle"
+                    "gsettings get org.gnome.desktop.interface gtk-theme"))
+         (default-directory "/")
+         (output (shell-command-to-string command)))
+    (if (or (string= "'Adwaita-dark'\n" output)
+            (string= "Dark\n" output))
+        t)))
 
 (defvar current-theme-dark (system-dark-theme-p)
   "Whether the current theme is the dark one")
