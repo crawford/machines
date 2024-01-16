@@ -2,28 +2,52 @@
 
 {
   environment.systemPackages = [ pkgs.ispell ];
-
   programs.vim.defaultEditor = lib.mkForce false;
 
-  services.emacs = {
-    enable        = true;
-    defaultEditor = true;
+  home-manager.users.alex = { pkgs, ... }: {
+    programs.emacs = {
+      enable      = true;
+      extraConfig = lib.readFile ./init.el;
 
-    package = (pkgs.emacs.overrideAttrs (self: {
-      postInstall = (self.postInstall or "") + ''
-        rm $out/share/applications/emacs.desktop
-      '';
-    })).pkgs.withPackages (epkgs: (with epkgs; [
-      eglot
-      ivy
-      magit
-      markdown-mode
-      nov
-      nix-mode
-      org
-      org-roam
-      rust-mode
-      vterm
-    ]));
+      extraPackages = epkgs: with epkgs; [
+        ace-window
+        eglot
+        hungry-delete
+        magit
+        nov
+        org
+        vterm
+
+        go-mode
+        json-mode
+        markdown-mode
+        protobuf-mode
+        nix-mode
+        org-roam
+        rust-mode
+        yaml-mode
+      ];
+
+      overrides = self: super: rec {
+        # Taken from https://github.com/magit/magit/issues/5011#issuecomment-1838598138
+        seq = self.callPackage ({ elpaBuild, fetchurl, lib }:
+          elpaBuild rec {
+            pname = "seq";
+            ename = "seq";
+            version = "2.24";
+            src = fetchurl {
+              url = "https://elpa.gnu.org/packages/seq-2.24.tar";
+              sha256 = "1w2cysad3qwnzdabhq9xipbslsjm528fcxkwnslhlkh8v07karml";
+            };
+            packageRequires = [];
+            meta = {
+              homepage = "https://elpa.gnu.org/packages/seq.html";
+              license = lib.licenses.free;
+            };
+            # tests take a _long_ time to byte-compile, skip them
+            postInstall = ''rm -r $out/share/emacs/site-lisp/elpa/${pname}-${version}/tests'';
+          }) {};
+      };
+    };
   };
 }
