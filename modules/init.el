@@ -55,7 +55,7 @@
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-saves" t)))
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
-;; (defun project-find-alt-root (dir)
+;; (defun abc/project-find-alt-root (dir)
 ;;   (let ((override (locate-dominating-file dir ".project.el")))
 ;;     (if override
 ;;         (cons 'vc override)
@@ -63,7 +63,7 @@
 
 (require 'project)
 (setq project-vc-extra-root-markers '(".project.el" ".projectile" ))
-;; (add-hook 'project-find-functions #'project-find-alt-root)
+;; (add-hook 'project-find-functions #'abc/project-find-alt-root)
 
 ;; Support for ebooks
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
@@ -86,7 +86,7 @@
 )
 
 ;; Use spaces for indentation
-(defun disable-indent-tabs-mode ()
+(defun abc/disable-indent-tabs-mode ()
   (indent-tabs-mode 0))
 ;; (setq-default indent-tabs-mode nil)
 
@@ -101,11 +101,11 @@
 ;; Configure C support
 ;; (add-to-list 'c-default-style '(c-mode . "linux"))
 (require 'cc-vars)
-(defun set-c-style ()
+(defun abc/set-c-style ()
   (setq c-basic-offset 4)
   (c-set-offset 'arglist-cont-nonempty '+)
   (c-set-style "linux"))
-(add-hook 'c-mode-hook #'set-c-style)
+(add-hook 'c-mode-hook #'abc/set-c-style)
 
 ;; Configure Rust support
 (require 'rust-mode)
@@ -113,7 +113,7 @@
 (setq eglot-stay-out-of '(eldoc))
 ;; (setq compilation-scroll-output t)
 (add-to-list 'eglot-server-programs '(rust-mode . ("rust-analyzer")))
-(defun configure-for-rust ()
+(defun abc/configure-for-rust ()
   (setq indent-tabs-mode nil)
   (setq whitespace-line-column 100)
   (set-fill-column 100)
@@ -121,25 +121,26 @@
   (global-set-key "\C-c\C-c\C-n" 'flymake-goto-next-error)
   (global-set-key "\C-c\C-c\C-p" 'flymake-goto-prev-error)
   (global-set-key "\C-c\C-c\C-f" 'eglot-format)
-  (eglot-ensure))
-(add-hook 'rust-mode-hook #'configure-for-rust)
-(add-hook 'c++-mode-hook #'configure-for-rust)
-(add-hook 'rust-mode-hook #'disable-indent-tabs-mode)
+  (eglot-ensure)
+  (company-mode))
+(add-hook 'rust-mode-hook #'abc/configure-for-rust)
+(add-hook 'c++-mode-hook #'abc/configure-for-rust)
+(add-hook 'rust-mode-hook #'abc/disable-indent-tabs-mode)
 
-(defun disable-whitespace-mode ()
+(defun abc/disable-whitespace-mode ()
   "Disables whitespace mode"
   (whitespace-mode 0))
 
 ;; Configure Go support
 (add-hook 'go-mode-hook #'eglot-ensure)
-(add-hook 'go-mode-hook #'disable-whitespace-mode)
+(add-hook 'go-mode-hook #'abc/disable-whitespace-mode)
 
 ;; Configure Markdown support
-(defun set-markdown-style ()
+(defun abc/set-markdown-style ()
   (set-fill-column 80)
   (setq whitespace-line-column 80))
-(add-hook 'markdown-mode-hook #'set-markdown-style)
-(add-hook 'markdown-mode-hook #'disable-indent-tabs-mode)
+(add-hook 'markdown-mode-hook #'abc/set-markdown-style)
+(add-hook 'markdown-mode-hook #'abc/disable-indent-tabs-mode)
 
 ;; Configure eshell
 ;; (add-to-list 'eshell-expand-input-functions 'eshell-expand-history-references)
@@ -152,7 +153,7 @@
 (global-set-key "\C-xxc" 'abc/rename-eshell-buffer)
 
 ;; Helper functions
-(defun dev-eshell (&rest args)
+(defun abc/dev-eshell (&rest args)
   "Create a new eshell in the dev VM"
   (interactive)
   (let ((default-directory "/ssh:dev:/home/user"))
@@ -166,7 +167,7 @@
 ;; Licensed by João Távora under the CC BY-SA 3.0
 ;; Modifications were made to the function name
 (define-key process-menu-mode-map (kbd "C-k") 'delete-process-at-point)
-(defun delete-process-at-point ()
+(defun abc/delete-process-at-point ()
   (interactive)
   (let ((process (get-text-property (point) 'tabulated-list-id)))
     (cond ((and process
@@ -177,7 +178,7 @@
            (error "no process at point!")))))
 
 ;; Automatically change the theme to match the system
-(defun system-dark-theme-p ()
+(defun abc/system-dark-theme-p ()
   "Check if the system is using the dark theme"
   (let* ((command (if (memq window-system '(ns))
                       "defaults read -globalDomain AppleInterfaceStyle"
@@ -188,33 +189,33 @@
             (string= "Dark\n" output))
         t)))
 
-(defvar current-theme-dark (system-dark-theme-p)
+(defvar abc/current-theme-dark (system-dark-theme-p)
   "Whether the current theme is the dark one")
 
-(defun update-theme ()
+(defun abc/update-theme ()
   "Update the theme to match the system"
   (interactive)
-  (if (system-dark-theme-p)
-      (if (not current-theme-dark)
+  (if (abc/system-dark-theme-p)
+      (if (not abc/current-theme-dark)
           (progn
             (load-theme 'tango-dark)
-            (setq current-theme-dark t)))
-    (if current-theme-dark
+            (setq abc/current-theme-dark t)))
+    (if abc/current-theme-dark
         (progn
           (load-theme 'tango)
-          (setq current-theme-dark nil)))))
+          (setq abc/current-theme-dark nil)))))
 
-(run-with-timer 30 30 'update-theme)
+(run-with-timer 30 30 'abc/update-theme)
 
 ;; Helper function for resolving IP addresses
-(defun ssh-ip (alias)
+(defun abc/ssh-ip (alias)
   "Resolve the IP address of the SSH host alias"
   (let ((default-directory "/"))
     (shell-command-to-string
      (concat "ssh -TG " alias " | awk '$1 == \"hostname\" { printf \"%s\", $2 }'" ))))
 
 ;; Helper for decoding and printing base64+json payloads
-(defun decode-and-pretty-print (beg end)
+(defun abc/decode-and-pretty-print (beg end)
   "Base64-decode and pretty print the inner JSON"
   (interactive "r")
   (let* ((payload (buffer-substring beg end))
@@ -223,8 +224,8 @@
     (delete-region beg end)
     (insert decoded)
     (json-pretty-print beg (+ beg (length decoded)))))
-;; (keymap-global-set "C-c C-b" 'decode-and-pretty-print)
-(global-set-key (kbd "C-c C-b") 'decode-and-pretty-print)
+;; (keymap-global-set "C-c C-b" 'abc/decode-and-pretty-print)
+(global-set-key (kbd "C-c C-b") 'abc/decode-and-pretty-print)
 
 
 (custom-set-variables
