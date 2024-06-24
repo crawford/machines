@@ -189,7 +189,7 @@
             (string= "Dark\n" output))
         t)))
 
-(defvar abc/current-theme-dark (system-dark-theme-p)
+(defvar abc/current-theme-dark nil
   "Whether the current theme is the dark one")
 
 (defun abc/update-theme ()
