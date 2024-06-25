@@ -16,6 +16,7 @@ in
 
   config = {
     environment.systemPackages = with pkgs; [
+      mautrix-googlechat
       mautrix-signal
       mautrix-whatsapp
     ];
@@ -105,6 +106,7 @@ in
           extraConfigFiles = [ "/var/lib/matrix-synapse/secrets.conf" ];
 
           app_service_config_files = [
+            "/var/lib/matrix-synapse/googlechat-registration.yaml"
             "/var/lib/matrix-synapse/signal-registration.yaml"
             "/var/lib/matrix-synapse/whatsapp-registration.yaml"
           ];
@@ -152,11 +154,12 @@ in
             locations = {
               "/".return = "404";
 
-              "/client/".proxyPass                                         = "http://127.0.0.1:8008";
-              "/_matrix/client/unstable/org.matrix.msc3575/sync".proxyPass = "http://127.0.0.1:8008";
-
               "/_matrix".proxyPass         = "http://[::1]:8448";
               "/_synapse/client".proxyPass = "http://[::1]:8448";
+              "/client/".proxyPass         = "http://[::1]:8008";
+              "/health".proxyPass          = "http://[::1]:8448";
+
+              "/_matrix/client/unstable/org.matrix.msc3575/sync".proxyPass = "http://127.0.0.1:8008";
             };
           };
 
@@ -226,22 +229,39 @@ in
         };
     };
 
-    systemd.services = {
-      mautrix-signal = {
-        description = "mautrix-signal bridge";
+    systemd.services = let
+      mautrix-bridge = name: pkg: {
+        description = "mautrix-${name} bridge";
         enable      = true;
 
-        after    = [ "matrix-synapse.service" "signald.service" ];
+        after    = [ "matrix-synapse.service" ];
         wantedBy = [ "multi-user.target" ];
 
-        unitConfig.JoinsNamespaceOf = "signald.service";
-
         serviceConfig = {
-          ExecStart        = "${pkgs.mautrix-signal}/bin/mautrix-signal";
+          ExecStart        = "${pkg}/bin/mautrix-${name}";
           PrivateTmp       = true;
-          User             = "mautrix-signal";
+          Restart          = "on-failure";
+          RestartSec       = "30s";
+          User             = "mautrix-${name}";
           WorkingDirectory = "~";
         };
+      };
+      recursive-merge = attrList: let
+        f = attrPath: with lib; zipAttrsWith (
+          n: values: if tail values == []
+                     then head values
+                     else if all isList values
+                     then unique (concatLists values)
+                     else if all isAttrs values
+                     then f (attrPath ++ [n]) values
+                     else last values);
+      in f [] attrList;
+    in {
+      mautrix-googlechat = mautrix-bridge "googlechat" pkgs.mautrix-googlechat;
+
+      mautrix-signal = mautrix-bridge "signal" pkgs.mautrix-signal // {
+        after = [ "matrix-synapse.service" "signald.service" ];
+        unitConfig.JoinsNamespaceOf = "signald.service";
       };
 
       matrix-sliding-sync = {
@@ -264,61 +284,47 @@ in
         };
       };
 
-      mautrix-whatsapp = {
-        description = "mautrix-whatsapp bridge";
-        enable      = true;
-
-        after    = [ "matrix-synapse.service" ];
-        wantedBy = [ "multi-user.target" ];
-
-        serviceConfig = {
-          ExecStart        = "${pkgs.mautrix-whatsapp}/bin/mautrix-whatsapp";
-          User             = "mautrix-whatsapp";
-          WorkingDirectory = "~";
-          Restart          = "on-failure";
-          RestartSec       = "30s";
-
-          ReadWritePaths          = "/var/lib/mautrix-whatsapp";
-          NoNewPrivileges         = true;
-          MemoryDenyWriteExecute  = true;
-          PrivateDevices          = true;
-          PrivateTmp              = true;
-          ProtectHome             = true;
-          ProtectSystem           = "strict";
-          ProtectControlGroups    = true;
-          RestrictSUIDSGID        = true;
-          RestrictRealtime        = true;
-          LockPersonality         = true;
-          ProtectKernelLogs       = true;
-          ProtectKernelTunables   = true;
-          ProtectHostname         = true;
-          ProtectKernelModules    = true;
-          PrivateUsers            = true;
-          ProtectClock            = true;
-          SystemCallArchitectures = "native";
-          SystemCallErrorNumber   = "EPERM";
-          SystemCallFilter        = "@system-service";
-        };
-      };
+      mautrix-whatsapp = recursive-merge [
+        (mautrix-bridge "whatsapp" pkgs.mautrix-whatsapp)
+        {
+          serviceConfig = {
+            ReadWritePaths          = "/var/lib/mautrix-whatsapp";
+            NoNewPrivileges         = true;
+            MemoryDenyWriteExecute  = true;
+            PrivateDevices          = true;
+            PrivateTmp              = true;
+            ProtectHome             = true;
+            ProtectSystem           = "strict";
+            ProtectControlGroups    = true;
+            RestrictSUIDSGID        = true;
+            RestrictRealtime        = true;
+            LockPersonality         = true;
+            ProtectKernelLogs       = true;
+            ProtectKernelTunables   = true;
+            ProtectHostname         = true;
+            ProtectKernelModules    = true;
+            PrivateUsers            = true;
+            ProtectClock            = true;
+            SystemCallArchitectures = "native";
+            SystemCallErrorNumber   = "EPERM";
+            SystemCallFilter        = "@system-service";
+          };
+        }
+      ];
     };
 
-    users.users = {
+    users.users = let
+      mautrix-bridge = name: {
+        createHome   = true;
+        group        = "nogroup";
+        home         = "/var/lib/mautrix-${name}";
+        isSystemUser = true;
+      };
+    in {
+      mautrix-googlechat     = mautrix-bridge "googlechat";
+      mautrix-signal         = mautrix-bridge "signal" // { extraGroups = [ "signald" ]; };
+      mautrix-whatsapp       = mautrix-bridge "whatsapp";
       turnserver.extraGroups = [ "nginx" ];
-
-      mautrix-signal = {
-        createHome   = true;
-        group        = "nogroup";
-        extraGroups  = [ "signald" ];
-        home         = "/var/lib/mautrix-signal";
-        isSystemUser = true;
-      };
-
-      mautrix-whatsapp = {
-        createHome   = true;
-        group        = "nogroup";
-        home         = "/var/lib/mautrix-whatsapp";
-        isSystemUser = true;
-      };
     };
   };
 }
