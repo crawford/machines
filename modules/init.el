@@ -42,8 +42,12 @@
 (setq whitespace-style '(face trailing lines-tail empty tab-mark space-mark spaces tabs))
 (global-whitespace-mode)
 (setq whitespace-global-modes '(not magit-status-mode))
-(set-face-attribute 'whitespace-space nil :foreground "#9999AA" :background nil)
-(set-face-attribute 'whitespace-tab nil :foreground "#9999AA" :background nil)
+(abc/style-whitespace)
+
+(defun abc/style-whitespace()
+  (interactive)
+  (set-face-attribute 'whitespace-space nil :foreground "#9999AA" :background nil)
+  (set-face-attribute 'whitespace-tab nil :foreground "#9999AA" :background nil))
 
 ;; Spell checking
 (add-hook 'text-mode-hook #'flyspell-mode)
@@ -199,10 +203,12 @@
       (if (not abc/current-theme-dark)
           (progn
             (load-theme 'tango-dark)
+            (abc/style-whitespace)
             (setq abc/current-theme-dark t)))
     (if abc/current-theme-dark
         (progn
           (load-theme 'tango)
+          (abc/style-whitespace)
           (setq abc/current-theme-dark nil)))))
 
 (run-with-timer 30 30 'abc/update-theme)
