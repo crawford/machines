@@ -42,12 +42,12 @@
 (setq whitespace-style '(face trailing lines-tail empty tab-mark space-mark spaces tabs))
 (global-whitespace-mode)
 (setq whitespace-global-modes '(not magit-status-mode))
-(abc/style-whitespace)
 
 (defun abc/style-whitespace()
   (interactive)
   (set-face-attribute 'whitespace-space nil :foreground "#9999AA" :background nil)
   (set-face-attribute 'whitespace-tab nil :foreground "#9999AA" :background nil))
+(abc/style-whitespace)
 
 ;; Spell checking
 (add-hook 'text-mode-hook #'flyspell-mode)
