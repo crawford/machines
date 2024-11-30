@@ -17,6 +17,11 @@
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (setq default-frame-alist '((vertical-scroll-bars . nil)))
+(setq column-number-indicator-zero-based nil)
+
+;; Enable system monitor
+;; (require 'symon)
+;; (symon-mode)
 
 ;; Enable interactive completion
 (ido-mode 1)
@@ -39,7 +44,14 @@
 ;; Show whitespace
 (require 'whitespace)
 (setq-default indicate-buffer-boundaries 'left)
-(setq whitespace-style '(face trailing lines-tail empty tab-mark space-mark spaces tabs))
+(setq whitespace-style '(face
+                         trailing
+                         ;; lines-tail
+                         empty
+                         tab-mark
+                         space-mark
+                         spaces
+                         tabs))
 (global-whitespace-mode)
 (setq whitespace-global-modes '(not magit-status-mode))
 
@@ -111,9 +123,18 @@
   (c-set-style "linux"))
 (add-hook 'c-mode-hook #'abc/set-c-style)
 
+;; Configure eglot
+(require 'eglot)
+(defun abc/configure-eglot-keymap ()
+  (keymap-set eglot-mode-map "C-c e a" 'eglot-code-actions)
+  (keymap-set eglot-mode-map "C-c e r" 'eglot-rename)
+  (keymap-set eglot-mode-map "C-c e f" 'eglot-format-buffer)
+  (keymap-set eglot-mode-map "C-c f n" 'flymake-goto-next-error)
+  (keymap-set eglot-mode-map "C-c f p" 'flymake-goto-prev-error))
+(add-hook 'eglot-mode-hook #'abc/configure-eglot-keymap)
+
 ;; Configure Rust support
 (require 'rust-mode)
-(require 'eglot)
 (setq eglot-stay-out-of '(eldoc))
 ;; (setq compilation-scroll-output t)
 (add-to-list 'eglot-server-programs '(rust-mode . ("rust-analyzer")))
@@ -130,6 +151,12 @@
 (add-hook 'rust-mode-hook #'abc/configure-for-rust)
 (add-hook 'c++-mode-hook #'abc/configure-for-rust)
 (add-hook 'rust-mode-hook #'abc/disable-indent-tabs-mode)
+
+;; Configure JavaScript
+(add-hook 'javascript-mode-hook #'abc/disable-indent-tabs-mode)
+
+;; Configure TypeScript
+(add-hook 'typescript-mode-hook #'abc/disable-indent-tabs-mode)
 
 (defun abc/disable-whitespace-mode ()
   "Disables whitespace mode"
@@ -148,12 +175,16 @@
 
 ;; Configure eshell
 ;; (add-to-list 'eshell-expand-input-functions 'eshell-expand-history-references)
+(defun abc/configure-eshell ()
+  (interactive)
+  compilation-shell-minor-mode)
 (defun abc/rename-eshell-buffer (&optional prefix)
   "Rename the eshell buffer with the given prefix"
   (interactive)
   (let* ((prefix (or prefix (read-string "Prefix: ")))
          (new-name (concat prefix "-eshell")))
     (rename-buffer new-name)))
+(add-hook 'eshell-mode-hook #'abc/configure-eshell)
 (global-set-key "\C-xxc" 'abc/rename-eshell-buffer)
 
 ;; Helper functions
@@ -162,6 +193,9 @@
   (interactive)
   (let ((default-directory "/ssh:dev:/home/user"))
     (eshell args)))
+
+;; RUSTC_WRAPPER=sccache
+;; PAGER=cat
 
 ;; Load local AWS functions
 (load-file "~/.emacs.d/aws.el")
