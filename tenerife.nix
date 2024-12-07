@@ -16,8 +16,12 @@
 
     programs.zsh.promptColor = "yellow";
 
-    services.nginx.virtualHosts."${config.networking.domain}".locations = {
-      "/".return = "301 https://www.${config.networking.domain}$request_uri";
+    services = {
+      do-agent.enable = true;
+
+      nginx.virtualHosts."${config.networking.domain}".locations = {
+        "/".return = "301 https://www.${config.networking.domain}$request_uri";
+      };
     };
 
     system.autoUpgrade = {
