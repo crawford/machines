@@ -174,9 +174,24 @@
 (add-hook 'markdown-mode-hook #'abc/disable-indent-tabs-mode)
 
 ;; Configure eshell
+(defvar-local abc/command-timer-print-threshold 10)
+(defvar-local abc/command-start-time nil)
+(defun abc/start-command-timer ()
+  (setq abc/command-start-time (current-time)))
+(defun abc/stop-command-timer ()
+  (when abc/command-start-time
+    (let ((duration (time-convert (time-subtract (current-time)
+                                                 abc/command-start-time)
+                                  'integer)))
+      (when (> duration abc/command-timer-print-threshold)
+        (eshell-interactive-print
+         (format "Elapsed: %s\n" (format-seconds "%H, %M, %z%S" duration)))))
+    (setq abc/command-start-time nil)))
 ;; (add-to-list 'eshell-expand-input-functions 'eshell-expand-history-references)
 (defun abc/configure-eshell ()
   (interactive)
+  (add-hook 'eshell-pre-command-hook #'abc/start-command-timer nil t)
+  (add-hook 'eshell-post-command-hook #'abc/stop-command-timer nil t)
   compilation-shell-minor-mode)
 (defun abc/rename-eshell-buffer (&optional prefix)
   "Rename the eshell buffer with the given prefix"
