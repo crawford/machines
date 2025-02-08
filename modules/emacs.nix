@@ -1,30 +1,35 @@
 { lib, pkgs, ... }:
 
 {
-  environment.systemPackages = [ pkgs.ispell ];
-  programs.vim.defaultEditor = lib.mkForce false;
+  # environment.systemPackages = [ pkgs.ispell ];
+  # programs.vim.defaultEditor = lib.mkForce false;
 
-  home-manager.users.alex = { pkgs, ... }: {
+ # home-manager.users.alex = { pkgs, ... }: {
     programs.emacs = {
       enable      = true;
       extraConfig = lib.readFile ./init.el;
 
       extraPackages = epkgs: with epkgs; [
         ace-window
+        company
         eglot
         hungry-delete
         magit
         nov
         org
+        symon
+        tree-sitter-indent
+        # tree-sitter-langs
         vterm
 
         go-mode
         json-mode
         markdown-mode
-        protobuf-mode
         nix-mode
         org-roam
+        protobuf-mode
         rust-mode
+        typescript-mode
         yaml-mode
       ];
 
@@ -49,5 +54,5 @@
           }) {};
       };
     };
-  };
+  #};
 }
