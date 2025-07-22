@@ -12,6 +12,7 @@
       extraPackages = epkgs: with epkgs; [
         ace-window
         cider
+        company
         eglot
         hungry-delete
         magit
@@ -22,9 +23,9 @@
         go-mode
         json-mode
         markdown-mode
-        protobuf-mode
         nix-mode
         org-roam
+        protobuf-mode
         rust-mode
         swift-mode
         yaml-mode
