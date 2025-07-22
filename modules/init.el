@@ -217,9 +217,6 @@
 ;; RUSTC_WRAPPER=sccache
 ;; PAGER=cat
 
-;; Load local AWS functions
-(load-file "~/.emacs.d/aws.el")
-
 ;; Make it easier to kill runaway processes
 ;; Found here: https://stackoverflow.com/a/18034042
 ;; Licensed by João Távora under the CC BY-SA 3.0
