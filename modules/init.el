@@ -171,6 +171,10 @@
 (add-hook 'go-mode-hook #'eglot-ensure)
 (add-hook 'go-mode-hook #'abc/disable-whitespace-mode)
 
+;; Swift
+(require 'swift-mode)
+(add-hook 'swift-mode-hook #'eglot-ensure)
+
 ;; Configure Markdown support
 (defun abc/set-markdown-style ()
   (set-fill-column 80)

@@ -30,6 +30,7 @@
         org-roam
         protobuf-mode
         rust-mode
+        swift-mode
         typescript-mode
         yaml-mode
       ];
