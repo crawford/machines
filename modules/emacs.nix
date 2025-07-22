@@ -20,6 +20,7 @@
         org
         vterm
 
+        clojure-mode
         go-mode
         json-mode
         markdown-mode
