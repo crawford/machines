@@ -152,6 +152,11 @@
 (add-hook 'c++-mode-hook #'abc/configure-for-rust)
 (add-hook 'rust-mode-hook #'abc/disable-indent-tabs-mode)
 
+;; Configure Clojure
+(defun abc/configure-for-clojure ()
+  (eglot-ensure))
+(add-hook 'clojure-mode-hook #'abc/configure-for-clojure)
+
 ;; Configure JavaScript
 (add-hook 'javascript-mode-hook #'abc/disable-indent-tabs-mode)
 
