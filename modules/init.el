@@ -197,7 +197,12 @@
   (interactive)
   (add-hook 'eshell-pre-command-hook #'abc/start-command-timer nil t)
   (add-hook 'eshell-post-command-hook #'abc/stop-command-timer nil t)
-  compilation-shell-minor-mode)
+  compilation-shell-minor-mode
+  ;; this seems to help reduce the latency when using eshell over TRAMP
+  ;; https://www.gnu.org/software/tramp/#Using-ssh-connection-sharing-1
+  (setq tramp-use-connection-share nil)
+  ;; https://www.gnu.org/software/tramp/#Configure-direct-copying-between-two-remote-servers
+  (setq tramp-use-scp-direct-remote-copying t))
 (defun abc/rename-eshell-buffer (&optional prefix)
   "Rename the eshell buffer with the given prefix"
   (interactive)
