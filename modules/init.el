@@ -135,6 +135,7 @@
 
 ;; Configure Rust support
 (require 'rust-mode)
+(require 'company)
 (setq eglot-stay-out-of '(eldoc))
 ;; (setq compilation-scroll-output t)
 (add-to-list 'eglot-server-programs '(rust-mode . ("rust-analyzer")))
