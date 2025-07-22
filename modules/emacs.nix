@@ -26,6 +26,7 @@
         nix-mode
         org-roam
         rust-mode
+        swift-mode
         yaml-mode
       ];
 
