@@ -11,6 +11,7 @@
 
       extraPackages = epkgs: with epkgs; [
         ace-window
+        cider
         company
         eglot
         hungry-delete
