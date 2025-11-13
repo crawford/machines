@@ -4,6 +4,9 @@
   environment.systemPackages = [ pkgs.ispell ];
   programs.vim.defaultEditor = lib.mkForce false;
 
+  # nix-mode uses `nix show-derivation`
+  nix.settings.experimental-features = [ "nix-command" ];
+
   home-manager.users.alex = { pkgs, ... }: {
     programs.emacs = {
       enable      = true;
