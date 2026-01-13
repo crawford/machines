@@ -5,25 +5,16 @@ let
 
   doxie-upload = pkgs.rustPlatform.buildRustPackage rec {
     pname = "doxie-upload";
-    version = "0.1.0";
+    version = "0.2.0";
 
     src = pkgs.fetchFromGitHub {
       owner  = "crawford";
       repo   = pname;
       rev    = version;
-      sha256 = "1bmfawjv4qqzk5gfwvj08flwzyvir9lhv1pcvzajcg9dbyzphz7f";
+      sha256 = "sha256-RiUbl3gZK2CMPUntzA0mPCokskQb4YfduCrat4/Pllc=";
     };
 
-    cargoLock = {
-      lockFile = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/crawford/doxie-upload/${version}/Cargo.lock";
-        sha256 = "sha256-iIlxJ8HC5fKcbTxCO3WaRyvAsu7A9Zx/O1hXlfSkOEc=";
-      };
-
-      outputHashes = {
-        "multipart-async-0.0.2" = "sha256-C3vrrYf7zeQGfGqHtoCdosWhC+sF3Xmx9g/MEFzrXMc=";
-      };
-    };
+    cargoHash = "sha256-Hlbm84m8g1evgp8dX3YB7UnC9mOXVQfGY1Qed/9wgc8=";
 
     meta = {
       description = "A simple file upload server compatible with Doxie scanners";
