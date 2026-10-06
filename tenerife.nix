@@ -5,6 +5,7 @@
     modules/common.nix
     modules/matrix.nix
     modules/server.nix
+    modules/where.nix
   ];
 
   config = {
