@@ -15,6 +15,8 @@
 
     networking.hostName = "tenerife";
 
+    nix.gc.options = lib.mkForce "--delete-older-than 7d";
+
     programs.zsh.promptColor = "yellow";
 
     services = {
@@ -25,9 +27,9 @@
       };
     };
 
-    system.autoUpgrade = {
-      allowReboot = true;
-      enable      = true;
+    zramSwap = {
+      enable        = true;
+      memoryPercent = 100;
     };
   };
 }

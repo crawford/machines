@@ -1,6 +1,6 @@
 {
   services = {
-    fwupd.enable    = true;
+    fwupd.enable    = false;
     sshguard.enable = true;
   };
 }

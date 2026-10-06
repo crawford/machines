@@ -6,19 +6,9 @@ let
   domain = config.networking.domain;
 in
 {
-  options.matrix = {
-    syncProxySecret = lib.mkOption {
-      description = ''
-        The value of SYNCV3_SECRET
-      '';
-    };
-  };
-
   config = {
     environment.systemPackages = with pkgs; [
-      mautrix-googlechat
-      mautrix-signal
-      mautrix-whatsapp
+      rust-synapse-compress-state
     ];
 
     networking.firewall = let
@@ -32,16 +22,19 @@ in
         coturn.tls-listening-port
         coturn.alt-tls-listening-port
       ];
-    in
-      {
-        allowedUDPPorts = coturnListeningPorts;
-        allowedTCPPorts = coturnListeningPorts ++ [
-          80
-          443
-        ];
+    in {
+      allowedUDPPorts = coturnListeningPorts;
+      allowedTCPPorts = coturnListeningPorts ++ [
+        80
+        443
+      ];
 
-        allowedUDPPortRanges = [ coturnRange ];
-      };
+      allowedUDPPortRanges = [ coturnRange ];
+    };
+
+    nixpkgs.config.permittedInsecurePackages = [
+      "olm-3.2.16"
+    ];
 
     security.acme = {
       acceptTerms = true;
@@ -52,8 +45,13 @@ in
       };
     };
 
-    services = {
-      signald.enable = true;
+    services = let
+      bridge-permissions  = {
+        "acrawford.com"       = "user";
+        "@alex:acrawford.com" = "admin";
+      };
+    in {
+      # signald.enable = true;
 
       coturn = {
         enable       = true;
@@ -86,7 +84,7 @@ in
           denied-peer-ip=198.51.100.0-198.51.100.255
           denied-peer-ip=203.0.113.0-203.0.113.255
           denied-peer-ip=240.0.0.0-255.255.255.255
-      '';
+        '';
       };
 
       matrix-synapse = {
@@ -98,17 +96,18 @@ in
             args.user = "matrix-synapse";
           };
 
-          max_upload_size = "50M";
+          max_upload_size = "200M";
           server_name     = domain;
+
+          enable_metrics = true;
 
           suppress_key_server_warning = true;
 
           extraConfigFiles = [ "/var/lib/matrix-synapse/secrets.conf" ];
 
+          use_presence = false;
+
           app_service_config_files = [
-            "/var/lib/matrix-synapse/googlechat-registration.yaml"
-            "/var/lib/matrix-synapse/signal-registration.yaml"
-            "/var/lib/matrix-synapse/whatsapp-registration.yaml"
           ];
 
           listeners = [{
@@ -123,7 +122,7 @@ in
                 compress = true;
               }
               {
-                names    = [ "federation" ];
+                names    = [ "federation" "metrics" ];
                 compress = false;
               }
             ];
@@ -211,153 +210,24 @@ in
 
       postgresql = let
         conn = config.services.matrix-synapse.settings.database.args;
-      in
-        {
-          enable  = true;
-          package = pkgs.postgresql_14;
+      in {
+        enable     = true;
+        package    = pkgs.postgresql_14;
+        extensions = [ pkgs.postgresql14Packages.pg_repack ];
 
-          initialScript = pkgs.writeText "matrix-init" ''
-        CREATE DATABASE "${conn.database}"
-          OWNER "${conn.user}"
-          ENCODING 'UTF8'
-          TEMPLATE template0
-          LC_COLLATE 'C'
-          LC_CTYPE 'C';
-        CREATE USER "${conn.user}";
-        GRANT ALL PRIVILEGES ON DATABASE "${conn.database}" TO "${conn.user}";
-      '';
-        };
-
-      mautrix-whatsapp = {
-        enable = true;
-
-        settings = {
-          appservice = {
-            database = {
-              type = "postgres";
-              uri = "postgresql:///mautrix_whatsapp?host=/run/postgresql";
-            };
-            ephemeral_events = false;
-            id = "whatsapp";
-          };
-          bridge = {
-            encryption = {
-              allow = true;
-              default = true;
-              require = true;
-            };
-            history_sync = {
-              request_full_sync = true;
-            };
-            mute_bridging = true;
-            permissions = {
-              "example.com" = "user";
-            };
-            private_chat_portal_meta = true;
-            provisioning = {
-              shared_secret = "disable";
-            };
-          };
-        };
+        initialScript = pkgs.writeText "matrix-init" ''
+          CREATE DATABASE "${conn.database}"
+            OWNER "${conn.user}"
+            ENCODING 'UTF8'
+            TEMPLATE template0
+            LC_COLLATE 'C'
+            LC_CTYPE 'C';
+          CREATE USER "${conn.user}";
+          GRANT ALL PRIVILEGES ON DATABASE "${conn.database}" TO "${conn.user}";
+        '';
       };
     };
 
-    systemd.services = let
-      mautrix-bridge = name: pkg: {
-        description = "mautrix-${name} bridge";
-        enable      = true;
-
-        after    = [ "matrix-synapse.service" ];
-        wantedBy = [ "multi-user.target" ];
-
-        serviceConfig = {
-          ExecStart        = "${pkg}/bin/mautrix-${name}";
-          PrivateTmp       = true;
-          Restart          = "on-failure";
-          RestartSec       = "30s";
-          User             = "mautrix-${name}";
-          WorkingDirectory = "~";
-        };
-      };
-      recursive-merge = attrList: let
-        f = attrPath: with lib; zipAttrsWith (
-          n: values: if tail values == []
-                     then head values
-                     else if all isList values
-                     then unique (concatLists values)
-                     else if all isAttrs values
-                     then f (attrPath ++ [n]) values
-                     else last values);
-      in f [] attrList;
-    in {
-      mautrix-googlechat = mautrix-bridge "googlechat" pkgs.mautrix-googlechat;
-
-      mautrix-signal = mautrix-bridge "signal" pkgs.mautrix-signal // {
-        after = [ "matrix-synapse.service" "signald.service" ];
-        unitConfig.JoinsNamespaceOf = "signald.service";
-      };
-
-      matrix-sliding-sync = {
-        description = "sliding sync proxy";
-        enable      = true;
-
-        after    = [ "matrix-synapse.service" ];
-        wantedBy = [ "multi-user.target" ];
-
-        serviceConfig = {
-          Environment = ''
-            "SYNCV3_SERVER=http://localhost:8448" \
-            "SYNCV3_DB=user=matrix-synapse host=/run/postgresql dbname=syncv3 sslmode=disable" \
-            "SYNCV3_LOG_LEVEL=warn" \
-            "SYNCV3_SECRET=${cfg.syncProxySecret}" \
-            "SYNCV3_BINDADDR=127.0.0.1:8008"
-          '';
-          ExecStart = "${pkgs.matrix-sliding-sync}/bin/syncv3";
-          User = "matrix-synapse";
-        };
-      };
-
-      mautrix-whatsapp = recursive-merge [
-        (mautrix-bridge "whatsapp" pkgs.mautrix-whatsapp)
-        {
-          serviceConfig = {
-            ReadWritePaths          = "/var/lib/mautrix-whatsapp";
-            NoNewPrivileges         = true;
-            MemoryDenyWriteExecute  = true;
-            PrivateDevices          = true;
-            PrivateTmp              = true;
-            ProtectHome             = true;
-            ProtectSystem           = "strict";
-            ProtectControlGroups    = true;
-            RestrictSUIDSGID        = true;
-            RestrictRealtime        = true;
-            LockPersonality         = true;
-            ProtectKernelLogs       = true;
-            ProtectKernelTunables   = true;
-            ProtectHostname         = true;
-            ProtectKernelModules    = true;
-            PrivateUsers            = true;
-            ProtectClock            = true;
-            SystemCallArchitectures = "native";
-            SystemCallErrorNumber   = "EPERM";
-            SystemCallFilter        = "@system-service";
-          };
-        }
-      ];
-    };
-
-    users.users = let
-      mautrix-bridge = name: {
-        createHome   = true;
-        group        = "nogroup";
-        home         = "/var/lib/mautrix-${name}";
-        isSystemUser = true;
-      };
-    in {
-      mautrix-googlechat     = mautrix-bridge "googlechat";
-      mautrix-signal         = mautrix-bridge "signal" // { extraGroups = [ "signald" ]; };
-      mautrix-whatsapp       = mautrix-bridge "whatsapp";
-      turnserver.extraGroups = [ "nginx" ];
-    };
+    users.users.turnserver.extraGroups = [ "nginx" ];
   };
 }

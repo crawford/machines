@@ -43,7 +43,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   services = {
-    xserver.xkbOptions = "terminate:ctrl_alt_bksp, ctrl:nocaps";
+    xserver.xkb.options = "terminate:ctrl_alt_bksp, ctrl:nocaps";
 
     openssh = {
       enable                 = true;
@@ -51,7 +51,6 @@
 
       settings = {
         PasswordAuthentication = false;
-        PermitRootLogin        = "no";
       };
     };
   };
