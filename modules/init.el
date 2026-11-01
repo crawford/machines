@@ -1,3 +1,6 @@
+;; Confirm before quitting
+(setq confirm-kill-emacs #'y-or-n-p)
+
 ;; Disable backup files
 (setq make-backup-files nil)
 
