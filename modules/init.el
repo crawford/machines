@@ -268,6 +268,10 @@
           (progn
             (load-theme 'tango-dark)
             (abc/style-whitespace)
+            (set-face-attribute 'mode-line nil
+                                :background "#555753" :foreground "#eeeeec" :box nil)
+            (set-face-attribute 'mode-line-inactive nil
+                                :background "#2e3436" :foreground "#888a85" :box nil)
             (setq abc/current-theme-dark t)))
     (if abc/current-theme-dark
         (progn
