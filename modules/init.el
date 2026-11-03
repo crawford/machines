@@ -129,6 +129,7 @@
 ;; Configure eglot
 (require 'eglot)
 (defun abc/configure-eglot-keymap ()
+  (interactive)
   (keymap-set eglot-mode-map "C-c e a" 'eglot-code-actions)
   (keymap-set eglot-mode-map "C-c e r" 'eglot-rename)
   (keymap-set eglot-mode-map "C-c e f" 'eglot-format-buffer)
